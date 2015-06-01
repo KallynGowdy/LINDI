@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Reflection;
+using LINDI.Core.Bindings;
 
 namespace LINDI.Core.Linq
 {
@@ -14,10 +16,23 @@ namespace LINDI.Core.Linq
         /// <param name="binding">The binding that should be finished.</param>
         /// <param name="expression">The expression that specifies </param>
         /// <returns></returns>
+        /// <exception cref="ArgumentException">Invalid Expression. The given expression must be a NewExpression. That is, the calling of a constructor.</exception>
         public static IBinding<TInterface> Select<TInterface, TImplementer>(this IBinding<TInterface> binding, Expression<Func<TInterface, TImplementer>>  expression)
             where TImplementer : TInterface
         {
-            return null;
+            NewExpression constructorExpression = expression.Body as NewExpression;
+
+            if (constructorExpression != null)
+            {
+                
+
+
+                return new BindToConstructor<TInterface, TImplementer>(Expression.Lambda<Func<TImplementer>>(constructorExpression).Compile());
+            }
+            else
+            {
+                throw new ArgumentException("Invalid Expression. The given expression must be a NewExpression. That is, the calling of a constructor.", nameof(expression));
+            }
         }
 
         public static IBinding<T> Where<T>(this IBinding<T> t, Func<object, bool> e)

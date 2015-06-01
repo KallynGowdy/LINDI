@@ -53,6 +53,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BindingTests.cs" />
     <Compile Include="ConceptTests.cs" />
     <Compile Include="IHasSample.cs" />
     <Compile Include="ISample.cs" />

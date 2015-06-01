@@ -21,8 +21,23 @@ namespace LINDI.Tests
         {
             IBinding<ISample> binding = from type in Bind<ISample>()
                                         select new Sample();
-            Assert.IsType<IBindToConstructor<ISample, Sample>>(binding);
+            Assert.IsAssignableFrom<IBindToConstructor<ISample, Sample>>(binding);
         }
 
+        [Fact]
+        public void TestBindTypeToConstructorWithExtraBindingsUsingLinqReturnsProperBindingType()
+        {
+            IBinding<ISample> binding = from type in Bind<ISample>()
+                                        select new Sample(default(object));
+            Assert.IsAssignableFrom<IBindToConstructor<ISample, Sample>>(binding);
+        }
+
+        [Fact]
+        public void TestBindTypeToConstructorWithGivenDataUsingLinqReturnsProperBindingType()
+        {
+            IBinding<ISample> binding = from type in Bind<ISample>()
+                                        select new Sample("Hello, World");
+            Assert.IsAssignableFrom<IBindToConstructor<ISample, Sample>>(binding);
+        }
     }
 }
