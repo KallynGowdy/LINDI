@@ -24,12 +24,15 @@ The expressions passed into the select method are used for special "expression-h
 
 ## Examples
 
+<strike>
 Automatically-chosen constructor:
 
 ```csharp
 IBinding<TInterface> finalBinding = b.Select(type => type as TImplementor);
 IBinding<TInterface> finalBinding = from type in b select type as TImplementor;
 ```
+</strike>
+
 User-defined constructor:
 
 ```csharp
@@ -47,16 +50,18 @@ IBinding<TInterface> finalBinding = from type in b select new TImplementor(defau
 
 ## Internal API
 
-Automatic bindings will be declared using an implementation of the `IBindToType<TInterface, TImplementer>` interface, which will normally be implemented by `BindToType<TInterface, TImplementer>` class.
 
-Usage:
+~~Automatic bindings will be declared using an implementation of the `IBindToType<TInterface, TImplementer>` interface, which will normally be implemented by `BindToType<TInterface, TImplementer>` class.~~
 
+~~Usage:~~
+<strike>
 ```csharp
 IBinding<TInterface> b = Bind<TInterface>().Select(type => type as TImplementer);
 
 // Equivalent
 IBinding<TInterface> b = new BindToType<TInterface, TImplementer>(Bind<TInterface>());
 ```
+</strike>
 
 Constructor bindings will be declared using an implementation of the `IBindToConstructor<TInterface, TImplementer>` interface, which will normally be implemented by `BindToConstructor<TInterface, TImplementer>` class.
 In order to resolve dependencies effeciently, no `IKernel` or `IResolver` or `ILocator` interface will be provided to the constructor function, thereby reducing the need for dictionary lookups and reflection calls. Rather, when an object needs to be resolved a function is generated that contains all of the direct calls to the required constructors.
