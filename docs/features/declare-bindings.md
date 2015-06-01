@@ -1,6 +1,8 @@
 # Declare Bindings
 This document represents the description of the feature that allows users of the API to declare bindings between interface types and their respective implementers.
 
+## User API
+
 Bindings will normally be declared using a static method that returns a type that can be operated on by the LINQ Extensions.
 
 	
@@ -42,3 +44,32 @@ Values can be resolved in the constructor using the `default(T)` operator:
 IBinding<TInterface> finalBinding = b.Select(type => new TImplementor(default(int)));
 IBinding<TInterface> finalBinding = from type in b select new TImplementor(default(int));
 ```
+
+## Internal API
+
+Automatic bindings will be declared using an implementation of the `IBindToType<TInterface, TImplementer>` interface, which will normally be implemented by `BindToType<TInterface, TImplementer>` class.
+
+Usage:
+
+```csharp
+IBinding<TInterface> b = Bind<TInterface>().Select(type => type as TImplementer);
+
+// Equivalent
+IBinding<TInterface> b = new BindToType<TInterface, TImplementer>(Bind<TInterface>());
+```
+
+Constructor bindings will be declared using an implementation of the `IBindToConstructor<TInterface, TImplementer>` interface, which will normally be implemented by `BindToConstructor<TInterface, TImplementer>` class.
+In order to resolve dependencies effeciently, no `IKernel` or `IResolver` or `ILocator` interface will be provided to the constructor function, thereby reducing the need for dictionary lookups and reflection calls. Rather, when an object needs to be resolved a function is generated that contains all of the direct calls to the required constructors.
+
+```csharp
+IBinding<TInterface> finalBinding = b.Select(type => new TImplementor());
+
+// Equivalent
+IBinding<TInterface> finalBinding = 
+			new BindToConstructor<TInterface, TImplementer>(
+				Bind<TInterface>(), 
+				(Func<TImplementer>) () => new TImplementer()
+			);
+```
+
+
