@@ -42,4 +42,4 @@ See [LICENSE][license].
 [ioc]: http://en.wikipedia.org/wiki/Inversion_of_control
 [pull-request]: https://help.github.com/articles/using-pull-requests/
 [master-branch]: https://github.com/KallynGowdy/LINDI/tree/master
-[license]: https://raw.githubusercontent.com/KallynGowdy/LINDI/master/LICENSE
+[license]: https://raw.githubusercontent.com/KallynGowdy/LINDI/master/LICENSE 
