@@ -1,4 +1,6 @@
 version: 1.0.{build}
 os: Previous Visual Studio 2015 RC
+before_build:
+  nuget restore
 build:
   verbosity: minimal

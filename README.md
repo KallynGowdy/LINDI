@@ -1,6 +1,8 @@
 # LINDI
 Language Integrated Dependency Injection ([LINQified][linq] [DI][di])
 
+[![Build status](https://ci.appveyor.com/api/projects/status/rnv5bxyty3aayyq3/branch/feature-test-drafts?svg=true&passingText=feature-test-drafts%20|%20Passing&pendingText=feature-test-drafts%20|%20Pending&failingText=feature-test-drafts%20|%20Failing)](https://ci.appveyor.com/project/KallynGowdy/lindi/branch/feature-test-drafts)
+
 Better and more natural [Inversion of Control][ioc] for .Net, LINDI is a language extension that takes advantage of [LINQ][linq] to specify Dependency Resolution and [Inversion of Control][ioc].
 
 This repository's current goal is to be a living document for the potential of such a feature. In the future, this repository will house the source and implementation of LINDI.
@@ -25,9 +27,9 @@ See [LICENSE][license].
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
- 
+
         http://www.apache.org/licenses/LICENSE-2.0
- 
+
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
