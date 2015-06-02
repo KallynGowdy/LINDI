@@ -9,7 +9,7 @@ This repository's current goal is to be a living document for the potential of s
 
 # Contributing
 ## New Features
-Our current workflow will rely on [pull requests][pull-request] for fleshing out features for the potential library. Follow these steps:
+The current workflow relies on [pull requests][pull-request] for fleshing out features for the potential library. Follow these steps:
 
 1. Come up with an idea for a feature
 2. Create a markdown document in the `docs/features` folder named after the proposed feature that contains a basic description and usage of the idea
