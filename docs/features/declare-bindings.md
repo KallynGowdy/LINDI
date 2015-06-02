@@ -5,11 +5,11 @@ This document represents the description of the feature that allows users of the
 
 Bindings will normally be declared using a static method that returns a type that can be operated on by the LINQ Extensions.
 
-	
+
 ```csharp
 public static IBinding<TInterface> Bind<TInterface>()
 {
-		return null;
+	return null;
 }
 ```
 
@@ -70,11 +70,8 @@ In order to resolve dependencies effeciently, no `IKernel` or `IResolver` or `IL
 IBinding<TInterface> finalBinding = b.Select(type => new TImplementor());
 
 // Equivalent
-IBinding<TInterface> finalBinding = 
-			new BindToConstructor<TInterface, TImplementer>(
-				Bind<TInterface>(), 
-				(Func<TImplementer>) () => new TImplementer()
-			);
+IBinding<TInterface> finalBinding = new BindToConstructor<TInterface, TImplementer>(
+	b,
+	(Func<TImplementer>) () => new TImplementer()
+);
 ```
-
-

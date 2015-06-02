@@ -4,7 +4,8 @@ This document represents the definition of the core features and goals of LINDI.
 ## Goals
 - A well-performing and reliable [Inversion of Control][ioc] library.
 - A easy-to-use and easy-to-understand [API][api] that leverages the fluent syntax of [LINQ][linq]
-- A simplified API that realizes the difficulties of building a usable, production ready library and that compensates by cutting extensive and complicated features. 
+- A simplified API that realizes the difficulties of building a usable, production ready library and that compensates by cutting extensive and complicated features.
+- Strong-typing of bindings so that entire dependency graphs are verifiable at compile time.
 
 # Mandatory Features
 - The ability to declare bindings between a base type and an implementer. ([Spec][declare-bindings])
