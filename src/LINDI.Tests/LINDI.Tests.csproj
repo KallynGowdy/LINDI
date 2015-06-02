@@ -65,7 +65,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\LINDI.Core\LINDI.Core.csproj">
+    <ProjectReference Include="..\LINDI.Core\LINDI.Core.csproj">
       <Project>{b07602f9-109b-4e41-9c5a-c5e0e4c9b6e8}</Project>
       <Name>LINDI.Core</Name>
     </ProjectReference>
