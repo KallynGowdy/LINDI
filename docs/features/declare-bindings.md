@@ -28,25 +28,26 @@ The expressions passed into the select method are used for special "expression-h
 Automatically-chosen constructor:
 
 ```csharp
-IBinding<TInterface> finalBinding = b.Select(type => type as TImplementor);
-IBinding<TInterface> finalBinding = from type in b select type as TImplementor;
+IBinding<TInterface> finalBinding = b.Select(type => type as TImplementer);
+IBinding<TInterface> finalBinding = from type in b select type as TImplementer;
 ```
 </strike>
 
 User-defined constructor:
 
 ```csharp
-IBinding<TInterface> finalBinding = b.Select(type => new TImplementor());
-IBinding<TInterface> finalBinding = from type in b select new TImplementor();
+IBinding<TInterface> finalBinding = b.Select(type => new TImplementer());
+IBinding<TInterface> finalBinding = from type in b select new TImplementer();
 ```
 
 Values can be resolved in the constructor using the `default(T)` operator:
 
 ```csharp
 // Resolve an int in the constructor
-IBinding<TInterface> finalBinding = b.Select(type => new TImplementor(default(int)));
-IBinding<TInterface> finalBinding = from type in b select new TImplementor(default(int));
+IBinding<TInterface> finalBinding = b.Select(type => new TImplementer(default(int)));
+IBinding<TInterface> finalBinding = from type in b select new TImplementer(default(int));
 ```
+
 
 ## Internal API
 
@@ -67,7 +68,7 @@ Constructor bindings will be declared using an implementation of the `IBindToCon
 In order to resolve dependencies effeciently, no `IKernel` or `IResolver` or `ILocator` interface will be provided to the constructor function, thereby reducing the need for dictionary lookups and reflection calls. Rather, when an object needs to be resolved a function is generated that contains all of the direct calls to the required constructors.
 
 ```csharp
-IBinding<TInterface> finalBinding = b.Select(type => new TImplementor());
+IBinding<TInterface> finalBinding = b.Select(type => new TImplementer());
 
 // Equivalent
 IBinding<TInterface> finalBinding = new BindToConstructor<TInterface, TImplementer>(
