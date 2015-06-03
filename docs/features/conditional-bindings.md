@@ -72,7 +72,9 @@ IBinding<TInterface> finalBinding = Bind<TInterface>()
 // Equivalent
 IBinding<TInterface> finalBinding =
   new BindToInjection<TInterface, TInjectedInto, TImplementer>(
-    new BindWithCondition<TInterface, TInjectedInto>(Bind<TInterface>()),
+    new BindToConstructor<TInterface, TImplementer>(
+      (Func<TImplementer>) () => new TImplementer()
+    ),
     (Func<TInjectedInto, TImplementer>) value => value.Property = new TImplementer()
   );
 ```

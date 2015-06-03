@@ -72,7 +72,6 @@ IBinding<TInterface> finalBinding = b.Select(type => new TImplementer());
 
 // Equivalent
 IBinding<TInterface> finalBinding = new BindToConstructor<TInterface, TImplementer>(
-	b,
 	(Func<TImplementer>) () => new TImplementer()
 );
 ```
