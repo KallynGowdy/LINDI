@@ -1,4 +1,7 @@
-﻿namespace LINDI.Core
+﻿using JetBrains.Annotations;
+using LINDI.Core.Bindings;
+
+namespace LINDI.Core
 {
     /// <summary>
     /// Defines an interface that represents a binding from an interface to a specified type.
@@ -10,6 +13,11 @@
         /// Resolves a value out of the binding.
         /// </summary>
         /// <returns>The value that should be resolved.</returns>
+        /// <exception cref="BindingResolutionException">
+        /// Thrown if binding fails to resolve properly. 
+        /// This SHOULD be the only catchable exception that is thrown from all instances of this method.
+        /// </exception>
+        [CanBeNull]
         TInterface Resolve();
     }
 }
