@@ -59,8 +59,10 @@
     <Compile Include="BindingTests.cs" />
     <Compile Include="BindToConstructorTests.cs" />
     <Compile Include="ConceptTests.cs" />
+    <Compile Include="HasSample.cs" />
     <Compile Include="IHasSample.cs" />
     <Compile Include="ISample.cs" />
+    <Compile Include="LinqSelectTests.cs" />
     <Compile Include="OtherSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sample.cs" />

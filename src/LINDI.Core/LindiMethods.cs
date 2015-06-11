@@ -21,5 +21,14 @@ namespace LINDI.Core
             return null;
         }
 
+        public static TInterface DependencyUsing<TInterface>(IBinding<TInterface> binding)
+        {
+            return default(TInterface);
+        }
+
+        public static TInterface UsesDependency<TInterface>(IBinding<TInterface> binding)
+        {
+            return default(TInterface);
+        }
     }
 }
