@@ -48,6 +48,14 @@ IBinding<TInterface> finalBinding = b.Select(type => new TImplementer(default(in
 IBinding<TInterface> finalBinding = from type in b select new TImplementer(default(int));
 ```
 
+Dependencies can be resolved using the `let` clause from LINQ:
+
+```
+IBinding<TInterface> finalBinding = from type in b
+                                    let dep = new TDependency()
+                                    select new TImplementer(dep);
+```
+
 
 ## Internal API
 
@@ -75,3 +83,8 @@ IBinding<TInterface> finalBinding = new BindToConstructor<TInterface, TImplement
 	(Func<TImplementer>) () => new TImplementer()
 );
 ```
+
+Bindings that require internal resolutions (such as those that use the `default(T)` operator) will rely on the [binding grouping APIs][binding-grouping] for service lookup.
+
+
+[binding-grouping]: ./binding-grouping.md
