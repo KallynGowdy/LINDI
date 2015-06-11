@@ -24,9 +24,6 @@ namespace LINDI.Core.Linq
 
             if (constructorExpression != null)
             {
-                
-
-
                 return new BindToConstructor<TInterface, TImplementer>(Expression.Lambda<Func<TImplementer>>(constructorExpression).Compile());
             }
             else

@@ -15,7 +15,11 @@ namespace LINDI.Core.Bindings
         /// <summary>
         /// Resolves a value out of the binding.
         /// </summary>
-        /// <returns>The value that should be resolved.</returns>
+        /// <returns>The value that was resolved.</returns>
+        /// <exception cref="BindingResolutionException">
+        /// Thrown if binding fails to resolve properly. 
+        /// This SHOULD be the only catchable exception that is thrown from all instances of this method.
+        /// </exception>
         public TInterface Resolve()
         {
             try
@@ -28,6 +32,11 @@ namespace LINDI.Core.Bindings
             }
         }
 
+        /// <summary>
+        /// Resolves the value for the binding.
+        /// If you are an implementer, implement this method how you would implement the <see cref="Resolve()"/> method.
+        /// </summary>
+        /// <returns>Returns the value that was resolved.</returns>
         protected abstract TInterface ResolveImplementation();
     }
 }

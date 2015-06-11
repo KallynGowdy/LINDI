@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace LINDI.Core.Bindings
 {
@@ -17,6 +18,7 @@ namespace LINDI.Core.Bindings
         /// <summary>
         /// Gets the function that is used as a constructor for new values.
         /// </summary>
+        [NotNull]
         Func<TImplementer> Constructor { get; }
     }
 }

@@ -27,12 +27,5 @@ namespace LINDI.Tests
 
             Assert.Same(value, obj);
         }
-
-
-        [Fact]
-        public void Test_Constructor_Gives_Useful_Resolve_Error()
-        {
-            
-        }
     }
 }

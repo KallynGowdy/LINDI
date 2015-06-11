@@ -12,7 +12,7 @@ namespace LINDI.Core
         /// <summary>
         /// Resolves a value out of the binding.
         /// </summary>
-        /// <returns>The value that should be resolved.</returns>
+        /// <returns>The value that was resolved.</returns>
         /// <exception cref="BindingResolutionException">
         /// Thrown if binding fails to resolve properly. 
         /// This SHOULD be the only catchable exception that is thrown from all instances of this method.
