@@ -48,6 +48,10 @@
     <Compile Include="Bindings\BindingResolutionException.cs" />
     <Compile Include="Bindings\BindToConstructor.cs" />
     <Compile Include="Bindings\IBindToConstructor.cs" />
+    <Compile Include="Bindings\LazyConstructorBinding.cs" />
+    <Compile Include="BindMethodAttribute.cs" />
+    <Compile Include="DependencyMethodAttribute.cs" />
+    <Compile Include="ExpressionHelpers.cs" />
     <Compile Include="IBinding.cs" />
     <Compile Include="LindiMethods.cs" />
     <Compile Include="Linq\BindingExtensions.cs" />
