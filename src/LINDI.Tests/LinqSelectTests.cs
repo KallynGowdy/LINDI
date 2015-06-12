@@ -30,11 +30,13 @@ namespace LINDI.Tests
         {
             IBinding<ISample> sampleBinding = Bind<ISample>().Select(value => new Sample());
 
-
             IBinding<IHasSample> binding = from value in Bind<IHasSample>()
                                            let dependencies = new { dep1 = DependencyUsing(sampleBinding) }
                                            select new HasSample(dependencies.dep1);
 
+            IBinding<IHasSample> b = from value in Bind<IHasSample>()
+                                     select new HasSample(DependencyUsing(sampleBinding));
+            
         }
     }
 }

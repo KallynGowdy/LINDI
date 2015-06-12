@@ -10,8 +10,8 @@ namespace LINDI.Core.Linq
     /// </summary>
     public static class BindingExtensions
     {
-        public static IDependencyBinding<TInterface, TDep> Select<TInterface, TDep, TImplementer>(this IDependencyBinding<TInterface, TDep> bindings, Expression<Func<TDep, TImplementer>> expression) where TImplementer : TInterface
-        {
+        public static IDependencyBinding<TInterface, TDep> Select<TInterface, TDep, TImplementer>(this IDependencyBinding<TInterface, TDep> bindings, Expression<Func<TDep, TImplementer>> expression)
+        { 
             return null;
         }
 
@@ -26,6 +26,7 @@ namespace LINDI.Core.Linq
         {
             return null;
         }
+        
 
         public static IBinding<T> Where<T>(this IBinding<T> t, Func<object, bool> e)
         {
@@ -37,6 +38,7 @@ namespace LINDI.Core.Linq
             return null;
         }
     }
+    
 
     public interface IDependencyBinding<TInterface, TDep> : IBinding<TInterface>
     {

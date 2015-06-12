@@ -11,12 +11,23 @@ As such, a distributed model for bindings is best. The recommended way of resolv
 IBinding<TDependency> DependencyBinding = from value in Bind<TDependency>()
                                           select new TDependency();
 
-IBinding<TInterface> finalBinding = from value in Bind<TInterface>()
-                                    // DependencyUsing() returns the value for the IBinding<T>
-                                    let dep = DependencyUsing(DependencyBinding)
-                                    select new TImplementer(dep);
+IBinding<TInterface> finalBinding =
+  from value in Bind<TInterface>()
+  // DependencyUsing() returns the value for the IBinding<T>
+  let d = new { dep = DependencyUsing(DependencyBinding) }
+  select new TImplementer(d.dep);
+
+
+// Alternate Syntax
+IBinding<TInterface> finalBinding =
+  from value in Bind<TInterface>()
+  // Named arguments aren't supported in expressions, sadly :(
+  select new TImplementer(DependencyUsing(DependencyBinding));
+
 
 ```
+
+Because of limitations in the LINQ expression API, I am not (currently) able to provide support for multiple `let` clauses that directly represent the binding dependency. Therefore, you should just use `anonymous classes` to define your dependencies in one `let` clause. If you prefer, you could just inline the dependency declarations in the constructor.
 
 ## User API
 
@@ -24,29 +35,35 @@ Dependencies are defined using the `let` clause from LINQ:
 
 ```csharp
 IBinding<TInterface> binding = from value in Bind<TInterface>()
-                               let dependency = DependencyUsing(bindingImDependentOn)
-                               select new TImplementer(dependency);
+                               let d = new { dep = DependencyUsing(bindingImDependentOn) }
+                               select new TImplementer(d.dep);
 ```
 
-Multiple dependencies, multiple `let` clauses:
+Multiple dependencies, multiple properties:
 
 ```csharp
 IBinding<TInterface> binding = from value in Bind<TInterface>()
-                               let dependency1 = DependencyUsing(bindingImDependentOn)
-                               let dependency2 = DependencyUsing(bindingImAlsoDependentOn)
-                               // ...
-                               select new TImplementer(dependency1, dependency2);
+                               let d = new
+                               {
+                                  dep1 = DependencyUsing(bindingImDependentOn),
+                                  dep2 = DependencyUsing(bindingImAlsoDependentOn)
+                               }
+                               select new TImplementer(d.dep1, d.dep2);
 ```
 
 To allow bindings to have custom parameters:
 
 ```csharp
 // IBinding<TIn, TOut>
-IBinding<DepType, TInterface> binding = from value in Bind<TInterface>()
-                               let dependency1 = DependencyUsing(bindingImDependentOn)
-                               let paramDependency = Param<DepType>()
-                               // ...
-                               select new TImplementer(dependency, paramDependency);
+IBinding<DepType, TInterface> binding =
+    from value in Bind<TInterface>()
+    let d = new
+    {
+      dep = DependencyUsing(bindingImDependentOn),
+      paramDep = Param<DepType>()
+    }
+    // ...
+    select new TImplementer(d.dep, d.paramDep);
 ```
 
 When being resolved, the given dependencies will be used for those constructor arguments.
@@ -60,18 +77,21 @@ This is what it looks like:
 
 ```csharp
 IBinding<TInterface> binding = from value in Bind<TInterface>()
-                               let dependency1 = DependencyUsing(bindingImDependentOn)
-                               let dependency2 = DependencyUsing(bindingImAlsoDependentOn)
+                               let d = new
+                               {
+                                 dep1 = DependencyUsing(bindingImDependentOn),
+                                 dep2 = DependencyUsing(bindingImAlsoDependentOn)
+                               }
                                // ...
-                               select new TImplementer(dependency1, dependency2);
+                               select new TImplementer(d.dep1, d.dep2);
 
 // Equivalent, in reality the anonymous class that is generated is used instead
 // of a tuple
 IBinding<TInterface> binding =
-  new LazyConstructorBinding<TInterface, Tuple<TBinding1, TBinding2>>(
-        new Tuple<TBinding1, TBinding2>(bindingImDependentOn, bindingImAlsoDependentOn),
+  new LazyConstructorBinding<TInterface>(
+        new IBinding[] { bindingImDependentOn, bindingImAlsoDependentOn },
 
         // Expression, not func
-        v => new TImplementer(v.Item1.Resolve(...), v.Item2.Resolve(...))
+        v => new TImplementer(v[0].Resolve(...), v[1].Resolve(...))
   );
 ```
