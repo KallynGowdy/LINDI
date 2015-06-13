@@ -5,8 +5,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Lindi.Core.Attributes;
 
-namespace LINDI.Core
+namespace Lindi.Core
 {
     /// <summary>
     /// Defines a static class that contains helpers for <see cref="Expression"/> objects.
@@ -50,10 +51,10 @@ namespace LINDI.Core
             }
 
             // new TImplementer(params)
-            var newConstructor = Expression.New(expression.Constructor, parameters);
+            NewExpression newConstructor = Expression.New(expression.Constructor, parameters);
 
             // (TInterface)new TImplementer(params)
-            var constructionCast = Expression.Convert(newConstructor, typeof(TInterface));
+            UnaryExpression constructionCast = Expression.Convert(newConstructor, typeof(TInterface));
 
             // b => (TInterface)new TImplementer(params)
             return Expression.Lambda<Func<IBinding[], TInterface>>(constructionCast, bindings);
@@ -71,7 +72,9 @@ namespace LINDI.Core
             {
                 IBinding b;
                 if (argument.IsDependencyExpression(out b))
+                {
                     bindings.Add(b);
+                }
             }
             return bindings.ToArray();
         }
@@ -100,10 +103,10 @@ namespace LINDI.Core
         }
 
         /// <summary>
-        /// 
+        /// Gets the value that the given expression resolves to.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="expression"></param>
+        /// <typeparam name="T">The expected type of the returned value.</typeparam>
+        /// <param name="expression">The expression that should be reduced to a value.</param>
         /// <returns></returns>
         public static T GetValueFromParameter<T>(this Expression expression)
         {

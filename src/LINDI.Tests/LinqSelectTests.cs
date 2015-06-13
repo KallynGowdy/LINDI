@@ -4,16 +4,16 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using LINDI.Core;
-using LINDI.Core.Bindings;
-using LINDI.Core.Linq;
+using Lindi.Core;
+using Lindi.Core.Bindings;
+using Lindi.Core.Linq;
 using Xunit;
-using static LINDI.Core.LindiMethods;
+using static Lindi.Core.LindiMethods;
 
-namespace LINDI.Tests
+namespace Lindi.Tests
 {
     /// <summary>
-    /// Tests for the <see cref="LINDI.Core.Linq.BindingExtensions.Select()"/> extension methods.
+    /// Tests for the <see cref="Lindi.Core.Linq.BindingExtensions.Select()"/> extension methods.
     /// </summary>
     public class LinqSelectTests
     {

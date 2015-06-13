@@ -1,4 +1,4 @@
-﻿namespace LINDI.Tests
+﻿namespace Lindi.Tests
 {
     public class OtherSample : ISample
     {

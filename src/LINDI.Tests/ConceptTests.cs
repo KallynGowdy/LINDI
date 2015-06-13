@@ -1,10 +1,10 @@
 ﻿using System;
-using LINDI.Core;
-using LINDI.Core.Linq;
+using Lindi.Core;
+using Lindi.Core.Linq;
 using Xunit;
-using static LINDI.Core.LindiMethods;
+using static Lindi.Core.LindiMethods;
 
-namespace LINDI.Tests
+namespace Lindi.Tests
 {
     public class ConceptTests
     {

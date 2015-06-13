@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 
-namespace LINDI.Core.Bindings
+namespace Lindi.Core.Bindings
 {
     /// <summary>
     /// Defines a binding that contains the ability to lazily build a <see cref="BindToConstructor{TInterface,TImplementer}"/>

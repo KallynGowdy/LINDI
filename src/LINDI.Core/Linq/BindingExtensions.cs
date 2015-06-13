@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using LINDI.Core.Bindings;
+using Lindi.Core.Bindings;
 
-namespace LINDI.Core.Linq
+namespace Lindi.Core.Linq
 {
     /// <summary>
     /// Defines extensions for <see cref="IBinding{TInterface}"/> objects that enable LINQ support.

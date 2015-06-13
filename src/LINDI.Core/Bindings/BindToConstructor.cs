@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace LINDI.Core.Bindings
+namespace Lindi.Core.Bindings
 {
     /// <summary>
     /// Defines a class that provides the default implementation of <see cref="IBindToConstructor{TInterface,TImplementer}"/>.

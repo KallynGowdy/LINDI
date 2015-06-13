@@ -1,7 +1,7 @@
 using System;
 using JetBrains.Annotations;
 
-namespace LINDI.Core.Bindings
+namespace Lindi.Core.Bindings
 {
     /// <summary>
     /// Defines a class that represents an exception that is thrown when a binding does not resolve

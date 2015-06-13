@@ -2,9 +2,10 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LINDI.Core.Linq;
+using Lindi.Core.Attributes;
+using Lindi.Core.Linq;
 
-namespace LINDI.Core
+namespace Lindi.Core
 {
     public static class LindiMethods
     {

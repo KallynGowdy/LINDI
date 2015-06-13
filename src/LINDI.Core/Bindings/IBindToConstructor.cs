@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 
-namespace LINDI.Core.Bindings
+namespace Lindi.Core.Bindings
 {
     /// <summary>
     /// Defines an interface that represents a binding from a given interface type to a given implementer type.

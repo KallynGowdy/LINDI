@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LINDI.Core;
-using LINDI.Core.Bindings;
-using LINDI.Core.Linq;
+using Lindi.Core;
+using Lindi.Core.Bindings;
+using Lindi.Core.Linq;
 using Xunit;
-using static LINDI.Core.LindiMethods;
+using static Lindi.Core.LindiMethods;
 
-namespace LINDI.Tests
+namespace Lindi.Tests
 {
     /// <summary>
     /// Tests verifying the binding behavior for types.

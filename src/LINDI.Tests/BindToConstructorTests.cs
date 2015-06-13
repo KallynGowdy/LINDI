@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LINDI.Core.Bindings;
+using Lindi.Core.Bindings;
 using Xunit;
 
-namespace LINDI.Tests
+namespace Lindi.Tests
 {
     /// <summary>
     /// Tests for <see cref="BindToConstructor{TInterface,TImplementer}"/>.

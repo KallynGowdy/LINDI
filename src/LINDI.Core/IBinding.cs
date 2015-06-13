@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
-using LINDI.Core.Bindings;
+using Lindi.Core.Bindings;
 
-namespace LINDI.Core
+namespace Lindi.Core
 {
     /// <summary>
     /// Defines an interface that represents a barebones binding.

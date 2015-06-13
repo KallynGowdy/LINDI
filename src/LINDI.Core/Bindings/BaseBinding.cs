@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LINDI.Core.Bindings
+namespace Lindi.Core.Bindings
 {
     /// <summary>
     /// Defines a <see cref="IBinding{TInterface}"/> that provides base functionality like wrapping all resolution exceptions in
