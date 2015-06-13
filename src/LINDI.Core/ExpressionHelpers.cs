@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Lindi.Core.Attributes;
+using Lindi.Core.Bindings;
 
 namespace Lindi.Core
 {
@@ -15,93 +16,81 @@ namespace Lindi.Core
     public static class ExpressionHelpers
     {
         /// <summary>
-        /// Replaces the arguments of the given <see cref="NewExpression"/> with the defined replacements.
+        /// Defines a class that is used to build expressions that can be used with the <see cref="LazyConstructorBinding{TInterface}"/>.
         /// </summary>
-        /// <param name="expression">The expression that the values should be replaced in.</param>
-        /// <param name="dependencies">The list of bindings that should replace the dependencies.</param>
-        /// <returns></returns>
-        public static Expression<Func<IBinding[], TInterface>>  ReplaceArguments<TInterface>(this NewExpression expression, IBinding[] dependencies)
+        private class LazyConstructorExpressionBuilder : ExpressionVisitor
         {
-            ParameterExpression bindings = Expression.Parameter(typeof(IBinding[]), "b");
+            private readonly List<IBinding> bindingDependencies = new List<IBinding>();
+            private readonly ParameterExpression parameter = Expression.Parameter(typeof(IBinding[]), "b");
 
-            List<Expression> parameters = new List<Expression>(expression.Arguments.Count);
-            int i = 0;
-            foreach (var argument in expression.Arguments)
+            /// <summary>
+            /// Gets the list of bindings that are called in methods annotated with the <see cref="DependencyMethodAttribute"/>
+            /// in the given expression.
+            /// </summary>
+            /// <param name="expression"></param>
+            /// <param name="dependencies"></param>
+            /// <returns></returns>
+            public Expression<Func<IBinding[], TInterface>>  FindAndReplaceDependencies<TInterface>(Expression expression, out IBinding[] dependencies)
             {
-                IBinding b;
-                if (argument.IsDependencyExpression(out b))
+                bindingDependencies.Clear();
+                Expression<Func<IBinding[], TInterface>> expr = Expression.Lambda<Func<IBinding[], TInterface>>(Visit(expression), parameter);
+                dependencies = bindingDependencies.ToArray();
+                return expr;
+            }
+
+            protected override Expression VisitParameter(ParameterExpression node)
+            {
+                throw new ArgumentException($"(ParamName: {node.Name}) Parameters from the given expression are not allowed. To pass in a value, make sure it is from an external source and is therefore captured as a constant expression", nameof(node));
+            }
+
+            protected override Expression VisitMethodCall(MethodCallExpression node)
+            {
+                if (IsDependencyMethod(node))
                 {
-                    Type bindingType = b.GetType().GetInterfaces().First(@interface => @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IBinding<>));
+                    IBinding binding = node.Arguments.First().GetValueFromParameter<IBinding>();
+                    bindingDependencies.Add(binding);
+
+                    Type bindingType = binding.GetType().GetInterfaces().First(@interface => @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IBinding<>));
 
                     // b[i]
-                    BinaryExpression index = Expression.ArrayIndex(bindings, Expression.Constant(i++));
+                    BinaryExpression index = Expression.ArrayIndex(parameter, Expression.Constant(bindingDependencies.Count - 1));
 
                     // (IBinding<T>)b[i]
                     UnaryExpression cast = Expression.Convert(index, bindingType);
 
                     // ((IBinding<T>)b[i]).Resolve()
-                    MethodCallExpression call = Expression.Call(cast, bindingType.GetMethod("Resolve"));
-
-                    parameters.Add(call);
+                    return Expression.Call(cast, bindingType.GetMethod("Resolve"));
                 }
-                else
-                {
-                    parameters.Add(argument);
-                }
+                return base.VisitMethodCall(node);
             }
 
-            // new TImplementer(params)
-            NewExpression newConstructor = Expression.New(expression.Constructor, parameters);
-
-            // (TInterface)new TImplementer(params)
-            UnaryExpression constructionCast = Expression.Convert(newConstructor, typeof(TInterface));
-
-            // b => (TInterface)new TImplementer(params)
-            return Expression.Lambda<Func<IBinding[], TInterface>>(constructionCast, bindings);
+            private static bool IsDependencyMethod(MethodCallExpression node)
+            {
+                return node.Method.GetCustomAttribute<DependencyMethodAttribute>() != null;
+            }
         }
 
         /// <summary>
-        /// Gets the list of dependencies that are defined in the given constructor.
+        /// Replaces the arguments of the given <see cref="NewExpression"/> with the defined replacements.
         /// </summary>
-        /// <param name="constructorExpression">The expression that the dependencies are defined in.</param>
-        /// <returns>Returns the list of bindings that are in the given constructor expression.</returns>
-        public static IBinding[] GetDependencies(this NewExpression constructorExpression)
+        /// <param name="expression">The expression that the values should be replaced in.</param>
+        /// <remarks>
+        /// In LINDI's case, "lazy" expressions are essentially pre-processed versions
+        /// of expressions that have been given to the LINDI expression engine.
+        /// These pre-processed versions replace the stubbed methods with calls to their binders and generally
+        /// prepare for being processed further.
+        /// 
+        /// Because a <see cref="LazyConstructorBinding{TInterface}"/> takes a list
+        /// of dependent <see cref="IBinding"/> objects and a function that utilizes those bindings,
+        /// we need to prepare it so that the stub methods are not actually called, but that the binding
+        /// is referenced directly.
+        /// </remarks>
+        public static Expression<Func<IBinding[], TInterface>> BuildLazyBindingExpression<TInterface>(this Expression expression, out IBinding[] dependentBindings)
         {
-            List<IBinding> bindings = new List<IBinding>();
-            foreach (Expression argument in constructorExpression.Arguments)
-            {
-                IBinding b;
-                if (argument.IsDependencyExpression(out b))
-                {
-                    bindings.Add(b);
-                }
-            }
-            return bindings.ToArray();
+            LazyConstructorExpressionBuilder visitor = new LazyConstructorExpressionBuilder();
+            return visitor.FindAndReplaceDependencies<TInterface>(expression, out dependentBindings);
         }
-
-        /// <summary>
-        /// Determines if the given expression represents the definition of a binding as a dependency.
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        public static bool IsDependencyExpression(this Expression expression, out IBinding dependency)
-        {
-            if (expression.NodeType == ExpressionType.Call)
-            {
-                MethodCallExpression methodCallExpression = (MethodCallExpression)expression;
-                MethodInfo method = methodCallExpression.Method;
-                DependencyMethodAttribute attribute = method.GetCustomAttribute<DependencyMethodAttribute>();
-
-                if (attribute != null)
-                {
-                    dependency = methodCallExpression.Arguments.First().GetValueFromParameter<IBinding>();
-                    return true;
-                }
-            }
-            dependency = null;
-            return false;
-        }
-
+        
         /// <summary>
         /// Gets the value that the given expression resolves to.
         /// </summary>

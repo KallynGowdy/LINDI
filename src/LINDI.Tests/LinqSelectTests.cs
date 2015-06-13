@@ -18,22 +18,61 @@ namespace Lindi.Tests
     public class LinqSelectTests
     {
         [Fact]
-        public void Test_Simple_NewExpression_Returns_Directly_Built_BindToConstructor_Binding()
-        {
-            IBinding<ISample> binding = Bind<ISample>().Select(type => new Sample());
-
-            Assert.IsType<BindToConstructor<ISample, Sample>>(binding);
-        }
-
-        [Fact]
         public void Test_NewExpression_With_Dependencies_Returns_A_LazyBindToConstructor()
         {
             IBinding<ISample> sampleBinding = Bind<ISample>().Select(value => new Sample());
-            
+
             IBinding<IHasSample> binding = from value in Bind<IHasSample>()
                                            select new HasSample(Dependency(sampleBinding));
 
             Assert.IsType<LazyConstructorBinding<IHasSample>>(binding);
+        }
+
+        [Fact]
+        public void Test_MethodCall_With_Dependencies_Returns_A_LazyBindToConstructor()
+        {
+            IBinding<ISample> sampleBinding = Bind<ISample>().Select(value => new Sample());
+
+            Func<ISample, HasSample> providerFunc = sample => null;
+
+            IBinding<IHasSample> binding = from value in Bind<IHasSample>()
+                                           select providerFunc(Dependency(sampleBinding));
+
+            Assert.IsType<LazyConstructorBinding<IHasSample>>(binding);
+        }
+
+        [Fact]
+        public void Test_MethodCall_With_Dependencies_And_NonDependencies_Returns_A_LazyBindToConstructor()
+        {
+            IBinding<ISample> sampleBinding = Bind<ISample>().Select(value => new Sample());
+
+            Func<ISample, int, HasSample> providerFunc = (sample, i) => null;
+
+            IBinding<IHasSample> binding = from value in Bind<IHasSample>()
+                                           select providerFunc(Dependency(sampleBinding), 1);
+
+            Assert.IsType<LazyConstructorBinding<IHasSample>>(binding);
+        }
+
+        [Fact]
+        public void Test_Passing_Expression_That_Uses_Value_Throws_ArgumentException()
+        {
+            IBinding<ISample> sampleBinding = Bind<ISample>().Select(value => new Sample());
+
+            Assert.Throws<ArgumentException>(() =>
+            {
+                IBinding<IHasSample> binding = from value in Bind<IHasSample>()
+                                               select value;
+            });
+        }
+
+        [Fact]
+        public void Test_Select_Throws_ArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                Bind<ISample>().Select((Expression<Func<ISample, Sample>>)null);
+            });
         }
     }
 }

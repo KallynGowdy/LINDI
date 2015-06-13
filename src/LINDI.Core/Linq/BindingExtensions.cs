@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using JetBrains.Annotations;
 using Lindi.Core.Bindings;
 
 namespace Lindi.Core.Linq
@@ -15,35 +16,27 @@ namespace Lindi.Core.Linq
         /// Finishes the binding between the given <see cref="IBinding{TInterface}"/> and the type resolved by the given expression.
         /// </summary>
         /// <param name="binding">The binding that should be finished.</param>
-        /// <param name="expression">The expression that specifies </param>
-        /// <returns></returns>
+        /// <param name="expression">
+        /// The expression that specifies how the value is retrieved.
+        /// This is generally a <see cref="NewExpression"/>, however anything that can be translated into a <see cref="Func{TImplementer}"/> can be used.
+        /// </param>
+        /// <returns>
+        /// Returns a new <see cref="IBinding{TInterface}"/> that is able to resolve a value that implements the specified type when <see cref="IBinding{TInterface}.Resolve"/> is called.
+        /// </returns>
         /// <exception cref="ArgumentException">Invalid Expression. The given expression must be a NewExpression. That is, the calling of a constructor.</exception>
-        public static IBinding<TInterface> Select<TInterface, TImplementer>(this IBinding<TInterface> binding, Expression<Func<TInterface, TImplementer>> expression)
+        public static IBinding<TInterface> Select<TInterface, TImplementer>(this IBinding<TInterface> binding, [NotNull] Expression<Func<TInterface, TImplementer>> expression)
             where TImplementer : TInterface
         {
-            NewExpression constructorExpression = expression.Body as NewExpression;
+            if (expression == null) throw new ArgumentNullException(nameof(expression));
+            Expression constructorExpression = expression.Body;
 
-            if (constructorExpression != null)
-            {
-                // Check for dependencies in the constructor expression
-                IBinding[] dependencies = constructorExpression.GetDependencies();
+            IBinding[] dependencies;
+            Expression<Func<IBinding[], TInterface>> lazyExpression = constructorExpression.BuildLazyBindingExpression<TInterface>(out dependencies);
 
-                if (dependencies.Length > 0)
-                {
-                    return new LazyConstructorBinding<TInterface>(dependencies, constructorExpression.ReplaceArguments<TInterface>(dependencies));
-                }
-                else
-                {
-                    return new BindToConstructor<TInterface, TImplementer>(Expression.Lambda<Func<TImplementer>>(constructorExpression).Compile());
-                }
-            }
-            else
-            {
-                throw new ArgumentException("Invalid Expression. The given expression must be a NewExpression. That is, the calling of a constructor.", nameof(expression));
-            }
+            return new LazyConstructorBinding<TInterface>(dependencies, lazyExpression);
         }
 
-        
+
 
         public static IBinding<T> Where<T>(this IBinding<T> t, Func<object, bool> e)
         {
