@@ -55,6 +55,19 @@ namespace Lindi.Tests
         }
 
         [Fact]
+        public void Test_MethodCall_With_Dependencies_And_NonDependant_Methods_Returns_A_LazyBindToConstructor()
+        {
+            IBinding<ISample> sampleBinding = Bind<ISample>().Select(value => new Sample());
+
+            Func<ISample, int, HasSample> providerFunc = (sample, i) => null;
+
+            IBinding<IHasSample> binding = from value in Bind<IHasSample>()
+                                           select providerFunc(Dependency(sampleBinding), Math.Abs(-9));
+
+            Assert.IsType<LazyConstructorBinding<IHasSample>>(binding);
+        }
+
+        [Fact]
         public void Test_Passing_Expression_That_Uses_Value_Throws_ArgumentException()
         {
             IBinding<ISample> sampleBinding = Bind<ISample>().Select(value => new Sample());
