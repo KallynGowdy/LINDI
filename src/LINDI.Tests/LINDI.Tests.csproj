@@ -64,6 +64,7 @@
     <Compile Include="HasSample.cs" />
     <Compile Include="IHasSample.cs" />
     <Compile Include="ISample.cs" />
+    <Compile Include="LazyBindToConstructorTests.cs" />
     <Compile Include="LinqSelectTests.cs" />
     <Compile Include="OtherSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

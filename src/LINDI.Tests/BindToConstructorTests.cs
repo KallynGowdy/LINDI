@@ -21,7 +21,7 @@ namespace Lindi.Tests
             {
                 return value;
             };
-            BindToConstructor<ISample, Sample> constructor = new BindToConstructor<ISample, Sample>(constructorFunc);
+            BindToConstructor<ISample> constructor = new BindToConstructor<ISample>(constructorFunc);
 
             ISample obj = constructor.Resolve();
 

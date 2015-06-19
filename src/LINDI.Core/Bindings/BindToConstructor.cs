@@ -8,8 +8,7 @@ namespace Lindi.Core.Bindings
     /// </summary>
     /// <typeparam name="TInterface"></typeparam>
     /// <typeparam name="TImplementer"></typeparam>
-    public class BindToConstructor<TInterface, TImplementer> : BaseBinding<TInterface>, IBindToConstructor<TInterface, TImplementer>
-        where TImplementer : TInterface
+    public class BindToConstructor<TInterface> : BaseBinding<TInterface>, IBindToConstructor<TInterface>
     {
         protected override TInterface ResolveImplementation()
         {
@@ -21,12 +20,12 @@ namespace Lindi.Core.Bindings
         /// resolves values via calling the given constructor object.
         /// </summary>
         /// <param name="constructor">The function that resolves an instance of <typeparamref name="TImplementer"/>.</param>
-        public BindToConstructor([NotNull] Func<TImplementer> constructor)
+        public BindToConstructor([NotNull] Func<TInterface> constructor)
         {
             if (constructor == null) throw new ArgumentNullException(nameof(constructor));
             Constructor = constructor;
         }
 
-        public Func<TImplementer> Constructor { get; }
+        public Func<TInterface> Constructor { get; }
     }
 }
