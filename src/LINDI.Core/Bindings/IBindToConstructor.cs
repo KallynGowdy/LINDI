@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
-namespace LINDI.Core.Bindings
+namespace Lindi.Core.Bindings
 {
     /// <summary>
     /// Defines an interface that represents a binding from a given interface type to a given implementer type.
@@ -17,6 +18,7 @@ namespace LINDI.Core.Bindings
         /// <summary>
         /// Gets the function that is used as a constructor for new values.
         /// </summary>
+        [NotNull]
         Func<TImplementer> Constructor { get; }
     }
 }

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LINDI.Tests", "LINDI.Tests\LINDI.Tests.csproj", "{566DD9F9-B1C2-4160-BC38-8D90E2F5E451}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lindi.Tests", "LINDI.Tests\Lindi.Tests.csproj", "{566DD9F9-B1C2-4160-BC38-8D90E2F5E451}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LINDI.Core", "LINDI.Core\LINDI.Core.csproj", "{B07602F9-109B-4E41-9C5A-C5E0E4C9B6E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lindi.Core", "LINDI.Core\Lindi.Core.csproj", "{B07602F9-109B-4E41-9C5A-C5E0E4C9B6E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -40,14 +40,12 @@ IBinding<TInterface> finalBinding = b.Select(type => new TImplementer());
 IBinding<TInterface> finalBinding = from type in b select new TImplementer();
 ```
 
-Values can be resolved in the constructor using the `default(T)` operator:
+Dependencies are defined using the `Dependency()` method helper in a constructor:
 
 ```csharp
-// Resolve an int in the constructor
-IBinding<TInterface> finalBinding = b.Select(type => new TImplementer(default(int)));
-IBinding<TInterface> finalBinding = from type in b select new TImplementer(default(int));
+IBinding<TInterface> binding = from value in Bind<TInterface>()
+                               select new TImplementer(Dependency(bindingImDependentOn));
 ```
-
 
 ## Internal API
 
@@ -75,3 +73,8 @@ IBinding<TInterface> finalBinding = new BindToConstructor<TInterface, TImplement
 	(Func<TImplementer>) () => new TImplementer()
 );
 ```
+
+Bindings that require internal resolutions (such as those that use the `default(T)` operator) will rely on the [binding grouping APIs][binding-grouping] for service lookup.
+
+
+[binding-grouping]: ./binding-grouping.md
