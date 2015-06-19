@@ -40,22 +40,12 @@ IBinding<TInterface> finalBinding = b.Select(type => new TImplementer());
 IBinding<TInterface> finalBinding = from type in b select new TImplementer();
 ```
 
-Values can be resolved in the constructor using the `default(T)` operator:
+Dependencies are defined using the `Dependency()` method helper in a constructor:
 
 ```csharp
-// Resolve an int in the constructor
-IBinding<TInterface> finalBinding = b.Select(type => new TImplementer(default(int)));
-IBinding<TInterface> finalBinding = from type in b select new TImplementer(default(int));
+IBinding<TInterface> binding = from value in Bind<TInterface>()
+                               select new TImplementer(Dependency(bindingImDependentOn));
 ```
-
-Dependencies can be resolved using the `let` clause from LINQ:
-
-```
-IBinding<TInterface> finalBinding = from type in b
-                                    let dep = new TDependency()
-                                    select new TImplementer(dep);
-```
-
 
 ## Internal API
 

@@ -18,6 +18,9 @@ namespace Lindi.Core
         /// <summary>
         /// Defines a class that is used to build expressions that can be used with the <see cref="LazyConstructorBinding{TInterface}"/>.
         /// </summary>
+        /// <remarks>
+        /// This class is not thread safe.
+        /// </remarks>
         private class LazyConstructorExpressionBuilder : ExpressionVisitor
         {
             private readonly List<IBinding> bindingDependencies = new List<IBinding>();
@@ -66,7 +69,7 @@ namespace Lindi.Core
 
             private static bool IsDependencyMethod(MethodCallExpression node)
             {
-                return node.Method.GetCustomAttribute<DependencyMethodAttribute>() != null;
+                return node.Method.GetCustomAttributes(typeof(DependencyMethodAttribute), false).Any();
             }
         }
 
@@ -75,15 +78,21 @@ namespace Lindi.Core
         /// </summary>
         /// <param name="expression">The expression that the values should be replaced in.</param>
         /// <remarks>
+        /// <para>
         /// In LINDI's case, "lazy" expressions are essentially pre-processed versions
         /// of expressions that have been given to the LINDI expression engine.
         /// These pre-processed versions replace the stubbed methods with calls to their binders and generally
         /// prepare for being processed further.
-        /// 
+        /// </para>
+        /// <para>
         /// Because a <see cref="LazyConstructorBinding{TInterface}"/> takes a list
         /// of dependent <see cref="IBinding"/> objects and a function that utilizes those bindings,
         /// we need to prepare it so that the stub methods are not actually called, but that the binding
         /// is referenced directly.
+        /// </para>
+        /// <para>
+        /// This method is thread-safe given that <paramref name="expression"/> and <paramref name="dependentBindings"/> are not used across multiple threads.
+        /// </para>
         /// </remarks>
         public static Expression<Func<IBinding[], TInterface>> BuildLazyBindingExpression<TInterface>(this Expression expression, out IBinding[] dependentBindings)
         {
@@ -96,7 +105,7 @@ namespace Lindi.Core
         /// </summary>
         /// <typeparam name="T">The expected type of the returned value.</typeparam>
         /// <param name="expression">The expression that should be reduced to a value.</param>
-        /// <returns></returns>
+        /// <returns>Returns the value that was resolved from the expression.</returns>
         public static T GetValueFromParameter<T>(this Expression expression)
         {
             var conversion = Expression.Convert(expression, typeof(T));

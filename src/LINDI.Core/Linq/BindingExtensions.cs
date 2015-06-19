@@ -20,6 +20,14 @@ namespace Lindi.Core.Linq
         /// The expression that specifies how the value is retrieved.
         /// This is generally a <see cref="NewExpression"/>, however anything that can be translated into a <see cref="Func{TImplementer}"/> can be used.
         /// </param>
+        /// <example>
+        /// Declare a binding to a constructor-like function:
+        /// 
+        /// <code>
+        /// IBinding<TInterface> finalBinding = b.Select(type => new TImplementer());
+        /// IBinding<TInterface> finalBinding = from type in b select new TImplementer();
+        /// </code>
+        /// </example>
         /// <returns>
         /// Returns a new <see cref="IBinding{TInterface}"/> that is able to resolve a value that implements the specified type when <see cref="IBinding{TInterface}.Resolve"/> is called.
         /// </returns>
