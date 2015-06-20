@@ -1,7 +1,7 @@
 # LINDI
 Language Integrated Dependency Injection ([LINQified][linq] [DI][di])
 
-[![Build status](https://ci.appveyor.com/api/projects/status/hkrqe6rakd7kuqbp/branch/master?svg=true&passingText=master%20|%20Passing&pendingText=master%20|%20Pending&failingText=master%20|%20Failing)](https://ci.appveyor.com/project/KallynGowdy/lindi/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/hkrqe6rakd7kuqbp/branch/master?svg=true&passingText=master%20|%20Passing&pendingText=master%20|%20Pending&failingText=master%20|%20Failing)](https://ci.appveyor.com/project/KallynGowdy/lindi/branch/master) [![Coverage Status](https://coveralls.io/repos/KallynGowdy/LINDI/badge.svg?branch=master)](https://coveralls.io/r/KallynGowdy/LINDI?branch=master)
 
 Better and more natural [Inversion of Control][ioc] for .Net, LINDI is a language extension that takes advantage of [LINQ][linq] to specify Dependency Resolution and [Inversion of Control][ioc].
 
