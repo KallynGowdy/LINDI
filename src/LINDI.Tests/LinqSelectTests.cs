@@ -102,5 +102,51 @@ namespace Lindi.Tests
                                                   };
             });
         }
+
+        [Fact]
+        public void Test_Binding_Can_Be_Resolved()
+        {
+            IBinding<ISample> sampleBinding = from value in Bind<ISample>()
+                                              select new Sample();
+
+            ISample sample = sampleBinding.Resolve();
+
+            Assert.NotNull(sample);
+            Assert.IsType<Sample>(sample);
+        }
+
+        [Fact]
+        public void Test_Binding_With_Dependencies_Can_Be_Resolved()
+        {
+            IBinding<ISample> sampleBinding = from value in Bind<ISample>()
+                                              select new Sample();
+            IBinding<IHasSample> hasSampleBinding = from value in Bind<IHasSample>()
+                                                    select new HasSample(Dependency(sampleBinding));
+
+            IHasSample hasSample = hasSampleBinding.Resolve();
+
+            Assert.NotNull(hasSample);
+            Assert.IsType<HasSample>(hasSample);
+            Assert.NotNull(hasSample.Sample);
+            Assert.IsType<Sample>(hasSample.Sample);
+        }
+
+        [Fact]
+        public void Test_MethodCall_With_Dependencies_And_NonDependant_Methods_Can_Be_Resolved()
+        {
+            IBinding<ISample> sampleBinding = Bind<ISample>().Select(value => new Sample());
+
+            Func<ISample, int, HasSample> providerFunc = (sample, i) => new HasSample(sample);
+
+            IBinding<IHasSample> binding = from value in Bind<IHasSample>()
+                                           select providerFunc(Dependency(sampleBinding), Math.Abs(-9));
+
+            IHasSample hasSample = binding.Resolve();
+
+            Assert.NotNull(hasSample);
+            Assert.IsType<HasSample>(hasSample);
+            Assert.NotNull(hasSample.Sample);
+            Assert.IsType<Sample>(hasSample.Sample);
+        }
     }
 }

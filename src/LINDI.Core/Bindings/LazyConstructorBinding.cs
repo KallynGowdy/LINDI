@@ -126,7 +126,7 @@ namespace Lindi.Core.Bindings
                     if (indexConstant != null)
                     {
                         int index = (int)indexConstant.Value;
-                        Type bindingType = node.Object.Type;
+                        Type bindingType = dependencies[index].GetType();
 
                         if (bindingType.IsGenericType)
                         {
