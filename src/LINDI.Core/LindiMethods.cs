@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Lindi.Core.Attributes;
 using Lindi.Core.Linq;
 
@@ -30,8 +32,9 @@ namespace Lindi.Core
         /// <typeparam name="TInterface"></typeparam>
         /// <param name="binding">The binding that should be used as a dependency for the parameter it is being passed as an argument for.</param>
         /// <returns>default(TInterface)</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null" />.</exception>
         [DependencyMethod]
-        public static TInterface Dependency<TInterface>(IBinding<TInterface> binding)
+        public static TInterface Dependency<TInterface>([NotNull] IBinding<TInterface> binding)
         {
             return default(TInterface);
         }

@@ -87,5 +87,20 @@ namespace Lindi.Tests
                 Bind<ISample>().Select((Expression<Func<ISample, Sample>>)null);
             });
         }
+
+        [Fact]
+        public void Test_Null_Dependency_Throws_ArgumentNullException()
+        {
+            IBinding<IHasSample> hasSampleBinding = null;
+
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                IBinding<ISample> sampleBinding = from value in Bind<ISample>()
+                                                  select new Sample()
+                                                  {
+                                                      Obj = Dependency(hasSampleBinding)
+                                                  };
+            });
+        }
     }
 }

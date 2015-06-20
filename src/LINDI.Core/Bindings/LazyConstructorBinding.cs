@@ -25,7 +25,7 @@ namespace Lindi.Core.Bindings
         /// Gets the expression that was passed to this binding to define the constructor.
         /// </summary>
         public Expression<Func<IBinding[], TInterface>> ConstructionExpression { get; }
-        
+
         /// <summary>
         /// Gets whether the constructor represented by this binding has been built.
         /// </summary>
@@ -70,8 +70,36 @@ namespace Lindi.Core.Bindings
             var inliner = new DependencyInliner(Dependencies.ToArray());
             return new BindToConstructor<TInterface>(inliner.InlineDependencies(ConstructionExpression.Body).Compile());
         }
-        
-        private class DependencyInliner : ExpressionVisitor
+
+        /// <summary>
+        /// Defines a <see cref="ExpressionVisitor"/> that provides functionality to inline a given expression
+        /// that contains references to a list of <see cref="IBinding"/> dependencies granted that each dependency is a 
+        /// lazy dependency.
+        /// </summary>
+        /// <example>
+        /// Given a <see cref="LazyConstructorBinding{TInterface}"/> like this:
+        /// 
+        /// <code>
+        /// var b =  new LazyConstructorBinding{TInterface}(new IBinding[]
+        /// {
+        ///     new LazyConstructorBinding{TDep}(new IBinding[0], bindings => new Dep())
+        /// }, bindings => new Value(((LazyConstructorBinding{TDep})bindings[0]).Resolve()));
+        /// </code>
+        /// 
+        /// And used like this:
+        /// 
+        /// <code>
+        /// var inliner = new DependencyInliner(b.Dependencies);
+        /// Expression{Func{TInterface}} finalExpression = inliner.InlineDependencies(b.ConstructionExpression);
+        /// </code>
+        /// 
+        /// The inliner will produce an expression like this:
+        /// 
+        /// <code>
+        /// new Value(new Dep())
+        /// </code>
+        /// </example>
+        public class DependencyInliner : ExpressionVisitor
         {
             IBinding[] dependencies;
 
@@ -82,28 +110,42 @@ namespace Lindi.Core.Bindings
 
             public Expression<Func<TInterface>> InlineDependencies(Expression expression)
             {
-                return Expression.Lambda<Func<TInterface>>(Visit(expression));
+                return Expression.Lambda<Func<TInterface>>(InlineDependenciesImpl(expression));
+            }
+
+            private Expression InlineDependenciesImpl(Expression expression)
+            {
+                return Visit(expression);
             }
 
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
                 if (node.Method.Name == nameof(IBinding<TInterface>.Resolve) && typeof(IBinding).IsAssignableFrom(node.Method.DeclaringType))
                 {
-                    IndexExpression indexExpression = (IndexExpression) node.Object;
-                    Type bindingType = indexExpression.Type;
-
-                    if (bindingType.IsGenericType &&
-                        bindingType.GetGenericTypeDefinition() == typeof (LazyConstructorBinding<>))
+                    ConstantExpression indexConstant = ((node.Object as UnaryExpression)?.Operand as BinaryExpression)?.Right as ConstantExpression;
+                    if (indexConstant != null)
                     {
-                        var dep = dependencies[indexExpression.Arguments[0].GetValueFromParameter<int>()];
-                        var dependencyResolver = new DependencyInliner((IBinding[])dep.GetPropertyValue(nameof(LazyConstructorBinding<TInterface>.Dependencies)));
+                        int index = (int)indexConstant.Value;
+                        Type bindingType = node.Object.Type;
 
-                        return dependencyResolver.InlineDependencies(
-                            (Expression)(dep.GetPropertyValue(
-                                nameof(LazyConstructorBinding<TInterface>.ConstructionExpression))
-                                    .GetPropertyValue(nameof(Expression<Func<TInterface>>.Body))
-                                    )
-                                 ).Body;
+                        if (bindingType.IsGenericType)
+                        {
+                            Type genericTypeDefinition = bindingType.GetGenericTypeDefinition();
+                            Type lazyConstructorType = typeof(ILazyConstructorBinding<>);
+                            if (genericTypeDefinition.Implements(lazyConstructorType) ||
+                                genericTypeDefinition == lazyConstructorType)
+                            {
+                                var dep = dependencies[index];
+                                var dependencyResolver = new DependencyInliner((IBinding[]) dep.GetPropertyValue(nameof(LazyConstructorBinding<TInterface>.Dependencies)));
+
+                                return dependencyResolver.InlineDependenciesImpl(
+                                    (Expression) (dep.GetPropertyValue(
+                                        nameof(LazyConstructorBinding<TInterface>.ConstructionExpression))
+                                                     .GetPropertyValue(nameof(Expression<Func<TInterface>>.Body))
+                                                 )
+                                    );
+                            }
+                        }
                     }
                 }
                 return base.VisitMethodCall(node);

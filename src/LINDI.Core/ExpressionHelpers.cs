@@ -51,6 +51,7 @@ namespace Lindi.Core
                 if (IsDependencyMethod(node))
                 {
                     IBinding binding = node.Arguments.First().GetValueFromParameter<IBinding>();
+                    if (binding == null) throw new ArgumentNullException(nameof(binding), "Null binding dependencies are not allowed, if you want to represent a null value, just pass in `null`, not `Dependency(null)`");
                     bindingDependencies.Add(binding);
 
                     Type bindingType = binding.GetType().GetInterfaces().First(@interface => @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IBinding<>));
