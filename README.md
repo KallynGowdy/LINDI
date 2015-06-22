@@ -13,7 +13,7 @@ Better and more natural way of defining dependencies in .Net, LINDI is a languag
 - [ ] Binding Scopes
 - [ ] Automatic Factory Generation
 - [ ] Named Bindings
-- [ ] `await` keyword for resolving dependencies
+- [x] `await` keyword for resolving dependencies
 
 ## Issues
 Submit new issues as needed, reuse non-closed issues if possible.

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Lindi.Core.Bindings;
 
@@ -54,6 +56,16 @@ namespace Lindi.Core.Linq
         public static IBinding<T> GroupBy<T>(this IBinding<T> t, Func<T, bool> e)
         {
             return null;
+        }
+
+        /// <summary>
+        /// Gets an awaiter used to await the resolution of this binding.
+        /// </summary>
+        /// <returns></returns>
+        public static TaskAwaiter<T> GetAwaiter<T>([NotNull] this IBinding<T> binding)
+        {
+            if (binding == null) throw new ArgumentNullException(nameof(binding));
+            return Task.FromResult(binding.Resolve()).GetAwaiter();
         }
     }
 }
