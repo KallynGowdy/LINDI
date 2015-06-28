@@ -10,7 +10,7 @@ Better and more natural way of defining dependencies in .Net, LINDI is a languag
 - [x] Create bindings between super types and their respective derived types
 - [x] Bindings created using LINQ expressions are inlined for performance benefits
 - [ ] Conditional Bindings
-- [ ] Binding Scopes
+- [x] Binding Scopes
 - [ ] Automatic Factory Generation
 - [x] `await` keyword for resolving dependencies
 
