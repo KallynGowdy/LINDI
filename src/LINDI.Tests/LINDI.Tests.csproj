@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AwaitableBindingTests.cs" />
     <Compile Include="BindingResolutionExceptionTests.cs" />
     <Compile Include="BindToConstructorTests.cs" />
     <Compile Include="ConceptTests.cs" />
