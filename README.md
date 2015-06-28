@@ -12,7 +12,6 @@ Better and more natural way of defining dependencies in .Net, LINDI is a languag
 - [ ] Conditional Bindings
 - [ ] Binding Scopes
 - [ ] Automatic Factory Generation
-- [ ] Named Bindings
 - [ ] `await` keyword for resolving dependencies
 
 ## Issues

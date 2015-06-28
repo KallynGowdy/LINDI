@@ -59,12 +59,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BindingResolutionExceptionTests.cs" />
     <Compile Include="BindToConstructorTests.cs" />
     <Compile Include="ConceptTests.cs" />
     <Compile Include="HasSample.cs" />
     <Compile Include="IHasSample.cs" />
     <Compile Include="ISample.cs" />
     <Compile Include="LazyBindToConstructorTests.cs" />
+    <Compile Include="LinqGroupByTests.cs" />
     <Compile Include="LinqSelectTests.cs" />
     <Compile Include="OtherSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

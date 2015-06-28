@@ -82,3 +82,10 @@ using(binding.Scope("Name"))
   Assert.Same(i, i2);
 }
 ```
+
+# Internal Implementation
+
+The implementation of these scopes should be pretty simple actually. We just need a dictionary to map values. If a value hasn't been created for that context, then we should create a new value and return it. I think that the solution should be agnostic to whether the value that is being retrieved is thread-safe. Thread-safety should be guaranteed in a way that is scalable as much as possible. Because of the requirement that a value is reused even if two different threads are calling at the same time, we will need to use locks. The good news is that this can still be scalable since a lock only needs to be used when a new value is being created for the binding. This ensures that threads will only be waiting while the value is created and never while the value is being accessed.
+
+The hard part for the implementation is removing dead context values from the dictionary. That is, when a request ends, we should get rid of the value related to the request to prevent memory leaks.
+This can be difficult, but I don't think it should be too bad if we provide a simple interface for managing that interaction. For example, when building the scoped binding we provide hooks to notify the manager when a scope has been exited. When a value is requested from the manager, the context is checked to see if the value has been created for that scope. If it hasn't, then a new value is created, registered with the specific scope resolver for notification, and returned.

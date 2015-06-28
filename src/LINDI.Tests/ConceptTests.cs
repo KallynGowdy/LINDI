@@ -34,10 +34,10 @@ namespace Lindi.Tests
             // Scope logic
             // Whether to reuse existing types or not
             // This example specifies a singleton
-            IBinding<ISample> b2 = Bind<ISample>().GroupBy(t => true).Select(t => t as Sample);
-            IBinding<ISample> b3 = from type in Bind<ISample>()
-                     group type by true into t
-                     select t as Sample;
+            //IBinding<ISample> b2 = Bind<ISample>().GroupBy(t => true).Select(t => t as Sample);
+            //IBinding<ISample> b3 = from type in Bind<ISample>()
+            //         group type by true into t
+            //         select t as Sample;
             
         }
 

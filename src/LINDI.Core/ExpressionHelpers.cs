@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Fasterflect;
+using JetBrains.Annotations;
 using Lindi.Core.Attributes;
 using Lindi.Core.Bindings;
 
@@ -33,7 +37,7 @@ namespace Lindi.Core
             /// <param name="expression"></param>
             /// <param name="dependencies"></param>
             /// <returns></returns>
-            public Expression<Func<IBinding[], TInterface>>  FindAndReplaceDependencies<TInterface>(Expression expression, out IBinding[] dependencies)
+            public Expression<Func<IBinding[], TInterface>> FindAndReplaceDependencies<TInterface>(Expression expression, out IBinding[] dependencies)
             {
                 bindingDependencies.Clear();
                 Expression<Func<IBinding[], TInterface>> expr = Expression.Lambda<Func<IBinding[], TInterface>>(Visit(expression), parameter);
@@ -100,7 +104,7 @@ namespace Lindi.Core
             LazyConstructorExpressionBuilder visitor = new LazyConstructorExpressionBuilder();
             return visitor.FindAndReplaceDependencies<TInterface>(expression, out dependentBindings);
         }
-        
+
         /// <summary>
         /// Gets the value that the given expression resolves to.
         /// </summary>
@@ -111,6 +115,50 @@ namespace Lindi.Core
         {
             var conversion = Expression.Convert(expression, typeof(T));
             return Expression.Lambda<Func<T>>(conversion).Compile()();
+        }
+
+        /// <summary>
+        /// Creates a new expression that represents a 'lock' expression, using the given <paramref name="lockObj"/> and <paramref name="body"/>.
+        /// </summary>
+        /// <param name="lockObj">An expression that resolves to a value that should be used for locking.</param>
+        /// <param name="body">The body that represents the body of the lock expression.</param>
+        /// <remarks>
+        /// This method generates a 'lock' statement, using the method detailed at http://stackoverflow.com/a/6029829/1832856.
+        /// The returned expression uses <see cref="Monitor.Enter(object,ref bool)"/> and <see cref="Monitor.Exit"/> to manage the lock state
+        /// for the given <paramref name="lockObj"/>.
+        /// </remarks>
+        /// <returns>Returns an expression that represents the lock statement.</returns>
+        public static Expression Lock([NotNull] Expression lockObj, [NotNull] Expression body)
+        {
+            if (lockObj == null) throw new ArgumentNullException(nameof(lockObj));
+            if (body == null) throw new ArgumentNullException(nameof(body));
+
+            ParameterExpression lockWasTaken = Expression.Variable(typeof(bool), "lockWasTaken");
+            ParameterExpression temp = Expression.Variable(lockObj.Type, "temp");
+
+            return Expression.Block(
+                // bool lockWasTaken;
+                // var temp = lockObj;
+                variables: new[] { lockWasTaken, temp },
+                expressions: new Expression[] {
+                    Expression.Assign(temp, lockObj),
+                    // try {
+                    Expression.TryFinally(
+                        Expression.Block(
+                            // Monitor.Enter(temp, ref lockWasTaken);
+                            Expression.Call(typeof(Monitor).Method("Enter", new[] { typeof(object), typeof(bool).MakeByRefType() }, Flags.Static | Flags.Public), temp, lockWasTaken),
+                            // body
+                            body
+                        ),
+                        // } finally {
+                        Expression.Block(
+                            // if(lockWasTaken) Monitor.Exit(lockObj);
+                            Expression.IfThen(lockWasTaken, Expression.Call(((Action<object>)Monitor.Exit).Method, temp))
+                        )
+                    // }
+                    )
+                }
+            );
         }
     }
 }
