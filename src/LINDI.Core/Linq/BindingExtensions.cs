@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -14,6 +15,17 @@ namespace Lindi.Core.Linq
     /// </summary>
     public static class BindingExtensions
     {
+        private static IBinding<TInterface> Wrap<TInterface>(IBinding<TInterface> wrapper, IBinding<TInterface> wrapped)
+        {
+            var superBinding = wrapper as IFilterBinding<TInterface>;
+            if (superBinding != null)
+            {
+                superBinding.SetBinding(wrapped);
+                return wrapper;
+            }
+            return wrapped;
+        } 
+
         /// <summary>
         /// Finishes the binding between the given <see cref="IBinding{TInterface}"/> and the type resolved by the given expression.
         /// </summary>
@@ -43,19 +55,28 @@ namespace Lindi.Core.Linq
             IBinding[] dependencies;
             Expression<Func<IBinding[], TInterface>> lazyExpression = constructorExpression.BuildLazyBindingExpression<TInterface>(out dependencies);
 
-            return new LazyConstructorBinding<TInterface>(dependencies, lazyExpression);
+            LazyConstructorBinding<TInterface> b = new LazyConstructorBinding<TInterface>(dependencies, lazyExpression);
+            return Wrap(binding, b);
         }
-
-
 
         public static IBinding<T> Where<T>(this IBinding<T> t, Func<object, bool> e)
         {
             return null;
         }
 
-        public static IBinding<T> GroupBy<T>(this IBinding<T> t, Func<T, bool> e)
+        /// <summary>
+        /// Builds on the given binding by grouping newly created values by the values returned by the given <paramref name="valueSelector"/>.
+        /// The <paramref name="valueSelector"/> is used to point to an ambient value that can change depending on the calling context.
+        /// </summary>
+        /// <param name="binding">The binding that the new binding should be wrapped inside.</param>
+        /// <param name="valueSelector">A function that retrieves the ambient value that the resolved values should be grouped by.</param>
+        /// <returns>A binding that is able to resolve the same value when the <paramref name="valueSelector"/> returns a same value.</returns>
+        public static IBinding<TInterface> GroupBy<TInterface, TValue>(this IBinding<TInterface> binding, [NotNull] Func<TInterface, TValue> valueSelector)
+            where TInterface : class
+            where TValue : class
         {
-            return null;
+            if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
+            return Wrap(binding, new ValueScopedBinding<TInterface, TValue>(() => valueSelector(null)));
         }
 
         /// <summary>

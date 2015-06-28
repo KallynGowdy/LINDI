@@ -28,4 +28,17 @@ namespace Lindi.Core
         [CanBeNull]
         TInterface Resolve();
     }
+
+    /// <summary>
+    /// Defines an interface that represents a binding that can contain and delegate resolution to other bindings.
+    /// </summary>
+    /// <typeparam name="TInterface"></typeparam>
+    public interface IFilterBinding<TInterface> : IBinding<TInterface>
+    {
+        /// <summary>
+        /// Adds the given binding to this binding.
+        /// </summary>
+        /// <param name="binding"></param>
+        void SetBinding([NotNull] IBinding<TInterface> binding);
+    }
 }

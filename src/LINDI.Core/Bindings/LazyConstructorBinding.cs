@@ -19,12 +19,12 @@ namespace Lindi.Core.Bindings
         /// <summary>
         /// Gets the list of bindings that represent the dependencies of this binding.
         /// </summary>
-        public IEnumerable<IBinding> Dependencies { get; }
+        public IEnumerable<IBinding> Dependencies { get; protected set; }
 
         /// <summary>
         /// Gets the expression that was passed to this binding to define the constructor.
         /// </summary>
-        public Expression<Func<IBinding[], TInterface>> ConstructionExpression { get; }
+        public Expression<Func<IBinding[], TInterface>> ConstructionExpression { get; protected set; }
 
         /// <summary>
         /// Gets whether the constructor represented by this binding has been built.
@@ -37,6 +37,11 @@ namespace Lindi.Core.Bindings
         public IBindToConstructor<TInterface> Constructor => constructor.Value;
 
         private readonly Lazy<IBindToConstructor<TInterface>> constructor;
+
+        protected LazyConstructorBinding()
+        {
+            constructor = new Lazy<IBindToConstructor<TInterface>>(BuildConstructor);
+        }
 
         /// <summary>
         /// Creates a new <see cref="LazyConstructorBinding{TInterface}"/> from the given dependencies and construction epression.
@@ -55,17 +60,18 @@ namespace Lindi.Core.Bindings
         /// );
         /// </code>
         /// </example>
-        public LazyConstructorBinding([NotNull] IEnumerable<IBinding> dependencies, [NotNull] Expression<Func<IBinding[], TInterface>> constructionExpression)
+        public LazyConstructorBinding([NotNull] IEnumerable<IBinding> dependencies, [NotNull] Expression<Func<IBinding[], TInterface>> constructionExpression) : this()
         {
             if (dependencies == null) throw new ArgumentNullException(nameof(dependencies));
             if (constructionExpression == null) throw new ArgumentNullException(nameof(constructionExpression));
             Dependencies = dependencies;
             ConstructionExpression = constructionExpression;
-            constructor = new Lazy<IBindToConstructor<TInterface>>(BuildConstructor);
         }
 
-        private IBindToConstructor<TInterface> BuildConstructor()
+        protected virtual IBindToConstructor<TInterface> BuildConstructor()
         {
+            if (Dependencies == null) throw new InvalidOperationException($"{nameof(Dependencies)} must be set before trying to build the final expression.");
+            if (ConstructionExpression == null) throw new InvalidOperationException($"{nameof(ConstructionExpression)} must be set before trying to build the final expression.");
             // Look through each dependency and inline it if possible
             var inliner = new DependencyInliner(Dependencies.ToArray());
             return new BindToConstructor<TInterface>(inliner.InlineDependencies(ConstructionExpression.Body).Compile());

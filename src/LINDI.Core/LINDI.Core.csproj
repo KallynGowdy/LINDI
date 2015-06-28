@@ -59,6 +59,7 @@
     <Compile Include="Bindings\LazyConstructorBinding.cs" />
     <Compile Include="Attributes\BindMethodAttribute.cs" />
     <Compile Include="Attributes\DependencyMethodAttribute.cs" />
+    <Compile Include="Bindings\ValueScopedBinding.cs" />
     <Compile Include="ExpressionHelpers.cs" />
     <Compile Include="IBinding.cs" />
     <Compile Include="LindiMethods.cs" />
