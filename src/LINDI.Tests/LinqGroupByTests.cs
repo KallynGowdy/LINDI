@@ -12,18 +12,16 @@ using static Lindi.Core.LindiMethods;
 namespace Lindi.Tests
 {
     /// <summary>
-    /// Tests for <see cref="BindingExtensions.GroupBy"/>.
+    /// Tests for <see cref="BindingExtensions.GroupBy{TInterface,TValue}"/>.
     /// </summary>
     public class LinqGroupByTests
     {
-        public static object Value { get; } = new object();
-        public static object OtherValue { get; }
-
         [Fact]
         public void Test_Grouped_Binding_Creates_New_Scoped_Binding_For_Given_Value()
         {
+            object val = new object();
             IBinding<ISample> binding = from type in Bind<ISample>()
-                                        group type by Value into scope
+                                        group type by val into scope
                                         select new Sample();
 
             Assert.NotNull(binding);
@@ -33,9 +31,10 @@ namespace Lindi.Tests
         [Fact]
         public void Test_Grouped_Binding_Can_Be_Resolved()
         {
+            object val = new object();
             Sample expectedValue = new Sample();
             IBinding<ISample> binding = from type in Bind<ISample>()
-                                        group type by Value into scope
+                                        group type by val into scope
                                         select expectedValue;
 
             ISample value = binding.Resolve();
@@ -46,8 +45,9 @@ namespace Lindi.Tests
         [Fact]
         public void Test_Grouped_Binding_Reuses_Value()
         {
+            object val = new object();
             IBinding<ISample> binding = from type in Bind<ISample>()
-                                        group type by Value into scope
+                                        group type by val into scope
                                         select new Sample();
 
             ISample value = binding.Resolve();
@@ -64,6 +64,50 @@ namespace Lindi.Tests
             {
                 IBinding<ISample> binding = Bind<ISample>().GroupBy<ISample, object>(null).Select(scope => new Sample());
             });
+        }
+
+        [Fact]
+        public void Test_Grouped_Binding_Produces_New_Value_When_Context_Value_Changes()
+        {
+            object val = new object();
+
+            IBinding<ISample> binding = from type in Bind<ISample>()
+                                        group type by val into scope
+                                        select new Sample();
+
+            ISample first = binding.Resolve();
+
+            val = new object();
+
+            ISample second = binding.Resolve();
+
+            Assert.NotSame(first, second);
+        }
+
+        [Fact]
+        public void Test_Grouped_Binding_Allows_Value_To_Be_Garbage_Collected()
+        {
+            WeakReference reference = null;
+
+            // Action symbolizes a request/response cycle like what you would see in a 
+            // ASP.Net Application
+            new Action(() =>
+            {
+                object val = new object(); // Use value, this could be anything (HttpContext, Thread, etc.)
+
+                IBinding<ISample> binding = from type in Bind<ISample>()
+                                            group type by val into scope
+                                            select new Sample();
+
+                ISample sample = binding.Resolve(); // Break down the created binding and make sure the value is allocated
+
+                reference = new WeakReference(val, true); // Obtain a weak reference to the value
+            })();
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Assert.Null(reference.Target);
         }
     }
 }
