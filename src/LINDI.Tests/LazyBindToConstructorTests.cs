@@ -39,13 +39,13 @@ namespace Lindi.Tests
             IHasSample sample = lazyBinding.Resolve();
 
             Assert.IsType<HasSample>(sample);
-            Assert.IsType<BindToConstructor<IHasSample>>(lazyBinding.Constructor);
+            Assert.IsType<ConstructorBinding<IHasSample>>(lazyBinding.Constructor);
         }
 
         [Fact]
         public void Test_Resolve_Implementation_Handles_Non_Lazy_Bindings_Correctly()
         {
-            IBinding<ISample> binding = new BindToConstructor<ISample>(() => new Sample());
+            IBinding<ISample> binding = new ConstructorBinding<ISample>(() => new Sample());
             LazyConstructorBinding<IHasSample> lazyBinding = new LazyConstructorBinding<IHasSample>(
                 new IBinding[0],
                 bindings => new HasSample(binding.Resolve()));
@@ -53,7 +53,7 @@ namespace Lindi.Tests
             IHasSample sample = lazyBinding.Resolve();
 
             Assert.IsType<HasSample>(sample);
-            Assert.IsType<BindToConstructor<IHasSample>>(lazyBinding.Constructor);
+            Assert.IsType<ConstructorBinding<IHasSample>>(lazyBinding.Constructor);
         }
 
         [Fact]

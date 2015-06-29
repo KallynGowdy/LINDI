@@ -8,6 +8,7 @@ using Lindi.Core.Bindings;
 using Lindi.Core.Linq;
 using Xunit;
 using static Lindi.Core.LindiMethods;
+using Thread = System.Threading.Thread;
 
 namespace Lindi.Tests
 {
@@ -17,7 +18,7 @@ namespace Lindi.Tests
     public class LinqGroupByTests
     {
         [Fact]
-        public void Test_Grouped_Binding_Creates_New_Scoped_Binding_For_Given_Value()
+        public void Test_Grouped_Binding_Creates_New_Scoped_Binding_For_Given_Reference_Value()
         {
             object val = new object();
             IBinding<ISample> binding = from type in Bind<ISample>()
@@ -25,7 +26,7 @@ namespace Lindi.Tests
                                         select new Sample();
 
             Assert.NotNull(binding);
-            Assert.IsType<ValueScopedBinding<ISample, object>>(binding);
+            Assert.IsType<ReferenceScopedBinding<ISample, object>>(binding);
         }
 
         [Fact]
@@ -108,6 +109,122 @@ namespace Lindi.Tests
             GC.WaitForPendingFinalizers();
 
             Assert.Null(reference.Target);
+        }
+
+        [Fact]
+        public void Test_Grouping_By_True_Creates_New_ValueScopedBinding()
+        {
+            IBinding<ISample> binding = from type in Bind<ISample>()
+                                        group type by true into scope
+                                        select new Sample();
+
+            Assert.NotNull(binding);
+            Assert.IsType<ValueScopedBinding<ISample, bool>>(binding);
+        }
+
+        [Fact]
+        public void Test_ValueScopedBinding_Can_Resolve_Values()
+        {
+            IBinding<ISample> binding = from type in Bind<ISample>()
+                                        group type by true into scope
+                                        select new Sample();
+
+            ISample value = binding.Resolve();
+
+            Assert.NotNull(value);
+        }
+
+        [Fact]
+        public void Test_ValueScopedBinding_Produces_Same_Value_For_Same_Selected_Value()
+        {
+            IBinding<ISample> binding = from type in Bind<ISample>()
+                                        group type by true into scope
+                                        select new Sample();
+
+            ISample value = binding.Resolve();
+
+            ISample other = binding.Resolve();
+
+            Assert.Same(value, other);
+        }
+
+        [Fact]
+        public void Test_ValueScopedBinding_Produces_Different_Value_For_Different_Selected_Value()
+        {
+            bool b = true;
+            Func<bool> selector = () => (b = !b);
+            IBinding<ISample> binding = from type in Bind<ISample>()
+                                        group type by selector() into scope
+                                        select new Sample();
+
+            ISample value = binding.Resolve();
+            ISample other = binding.Resolve();
+
+            Assert.NotSame(value, other);
+            Assert.Same(value, binding.Resolve());
+        }
+
+        [Fact]
+        public void Test_Group_By_Singleton_Produces_Same_Value_Every_Time()
+        {
+            IBinding<ISample> binding = from type in Bind<ISample>()
+                                        group type by Singleton() into scope
+                                        select new Sample();
+
+            ISample value = binding.Resolve();
+
+            ISample other = binding.Resolve();
+
+            Assert.Same(value, other);
+        }
+
+        [Fact]
+        public void Test_Group_By_Thread_Produces_Same_Value_Inside_Same_Thread()
+        {
+            IBinding<ISample> binding = from type in Bind<ISample>()
+                                        group type by Thread() into scope
+                                        select new Sample();
+            ISample value = null;
+            ISample otherValue = null;
+            Thread t = new Thread(() =>
+            {
+                value = binding.Resolve();
+                otherValue = binding.Resolve();
+            });
+
+            t.Start();
+            t.Join();
+
+            Assert.NotNull(value);
+            Assert.NotNull(otherValue);
+            Assert.Same(value, otherValue);
+        }
+
+        [Fact]
+        public void Test_Group_By_Thread_Produces_Different_Value_On_Different_Threads()
+        {
+            IBinding<ISample> binding = from type in Bind<ISample>()
+                                        group type by Thread() into scope
+                                        select new Sample();
+            ISample value = null;
+            ISample otherValue = null;
+            Thread t = new Thread(() =>
+            {
+                value = binding.Resolve();
+            });
+            Thread t1 = new Thread(() =>
+            {
+                otherValue = binding.Resolve();
+            });
+
+            t.Start();
+            t1.Start();
+            t.Join();
+            t1.Join();
+
+            Assert.NotNull(value);
+            Assert.NotNull(otherValue);
+            Assert.NotSame(value, otherValue);
         }
     }
 }

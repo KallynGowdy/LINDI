@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 namespace Lindi.Core.Bindings
 {
     /// <summary>
-    /// Defines a binding that contains the ability to lazily build a <see cref="BindToConstructor{TInterface,TImplementer}"/>
+    /// Defines a binding that contains the ability to lazily build a <see cref="ConstructorBinding{TInterface}"/>
     /// binding based on the given dependencies and expression.
     /// </summary>
     /// <typeparam name="TInterface">The type of values that this binding can produce.</typeparam>
@@ -33,6 +33,6 @@ namespace Lindi.Core.Bindings
         /// Gets the internal binding that is built by this lazy binding.
         /// </summary>
         [NotNull]
-        IBindToConstructor<TInterface> Constructor { get; }
+        IConstructorBinding<TInterface> Constructor { get; }
     }
 }

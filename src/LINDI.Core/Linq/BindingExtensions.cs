@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Fasterflect;
 using JetBrains.Annotations;
 using Lindi.Core.Bindings;
 
@@ -17,14 +18,14 @@ namespace Lindi.Core.Linq
     {
         private static IBinding<TInterface> Wrap<TInterface>(IBinding<TInterface> wrapper, IBinding<TInterface> wrapped)
         {
-            var superBinding = wrapper as IFilterBinding<TInterface>;
+            var superBinding = wrapper as IDeferredBinding<TInterface>;
             if (superBinding != null)
             {
                 superBinding.SetBinding(wrapped);
                 return wrapper;
             }
             return wrapped;
-        } 
+        }
 
         /// <summary>
         /// Finishes the binding between the given <see cref="IBinding{TInterface}"/> and the type resolved by the given expression.
@@ -73,10 +74,24 @@ namespace Lindi.Core.Linq
         /// <returns>A binding that is able to resolve the same value when the <paramref name="valueSelector"/> returns a same value.</returns>
         public static IBinding<TInterface> GroupBy<TInterface, TValue>(this IBinding<TInterface> binding, [NotNull] Func<TInterface, TValue> valueSelector)
             where TInterface : class
-            where TValue : class
         {
             if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
-            return Wrap(binding, new ValueScopedBinding<TInterface, TValue>(() => valueSelector(null)));
+            IBinding<TInterface> scopedBinding;
+            if (typeof(TValue).IsValueType)
+            {
+                scopedBinding = (IBinding<TInterface>)typeof(ValueScopedBinding<,>)
+                                    .MakeGenericType(typeof(TInterface), typeof(TValue))
+                                    .Constructor(typeof(Func<TValue>))
+                                    .Invoke(new object[] { (Func<TValue>)(() => valueSelector(null)) }); ;
+            }
+            else
+            {
+                scopedBinding = (IBinding<TInterface>)typeof(ReferenceScopedBinding<,>)
+                                    .MakeGenericType(typeof(TInterface), typeof(TValue))
+                                    .Constructor(typeof(Func<TValue>))
+                                    .Invoke(new object[] { (Func<TValue>)(() => valueSelector(null)) });
+            }
+            return Wrap(binding, scopedBinding);
         }
 
         /// <summary>

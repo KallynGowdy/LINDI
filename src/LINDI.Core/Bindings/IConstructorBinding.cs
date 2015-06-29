@@ -11,7 +11,7 @@ namespace Lindi.Core.Bindings
     /// Defines an interface that represents a binding from a given interface type to a given implementer type.
     /// </summary>
     /// <typeparam name="TInterface">The type of the interface that is being bound.</typeparam>
-    public interface IBindToConstructor<out TInterface> : IBinding<TInterface>
+    public interface IConstructorBinding<out TInterface> : IBinding<TInterface>
     {
         /// <summary>
         /// Gets the function that is used as a constructor for new values.
