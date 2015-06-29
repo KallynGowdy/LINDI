@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using System.Runtime.CompilerServices;
 using Lindi.Core.Bindings;
+using Lindi.Core.Linq;
 
 namespace Lindi.Core
 {
@@ -30,15 +31,34 @@ namespace Lindi.Core
     }
 
     /// <summary>
-    /// Defines an interface that represents a binding that can contain and delegate resolution to other bindings.
+    /// Defines an interface that represents a binding who's actual binding resolution is determined by a "child" binding after the object is created.
     /// </summary>
-    /// <typeparam name="TInterface"></typeparam>
-    public interface IFilterBinding<TInterface> : IBinding<TInterface>
+    /// <remarks>
+    /// <para>
+    /// This interface is used by the methods defined in <see cref="BindingExtensions"/> as a way to "wrap" values so that they
+    /// can maintain the binding hierarchy that they are defined in.
+    /// </para>
+    /// 
+    /// <example>
+    /// This:
+    /// <code>
+    /// Bind{T}().GroupBy(type => otherValue).Select(type => new Type());
+    /// </code>
+    /// 
+    /// Translates roughly to:
+    /// 
+    /// <code>
+    /// new ReferenceScopedBinding(new ConstructorBinding(() => new Type()));
+    /// </code>
+    /// </example>
+    /// </remarks>
+    /// <typeparam name="TInterface">The type that is being bound to another type.</typeparam>
+    public interface IDeferredBinding<TInterface> : IBinding<TInterface>
     {
         /// <summary>
-        /// Adds the given binding to this binding.
+        /// Sets the given binding for this deferred binding.
         /// </summary>
-        /// <param name="binding"></param>
+        /// <param name="binding">The binding that should be used for internal resolution.</param>
         void SetBinding([NotNull] IBinding<TInterface> binding);
     }
 }

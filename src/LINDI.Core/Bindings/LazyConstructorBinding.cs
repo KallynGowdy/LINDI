@@ -10,12 +10,14 @@ using JetBrains.Annotations;
 namespace Lindi.Core.Bindings
 {
     /// <summary>
-    /// Defines a binding that contains the ability to lazily build a <see cref="BindToConstructor{TInterface,TImplementer}"/>
+    /// Defines a binding that contains the ability to lazily build a <see cref="ConstructorBinding{TInterface}"/>
     /// binding based on the given dependencies and expression.
     /// </summary>
     /// <typeparam name="TInterface">The type of values that this binding can produce.</typeparam>
     public class LazyConstructorBinding<TInterface> : BaseBinding<TInterface>, ILazyConstructorBinding<TInterface>
     {
+        private const string MustBeSetBeforeUseFormat = "{0} must be set before trying to build the final expression. Did you forget to call Select() at the end of setting up a binding?";
+
         /// <summary>
         /// Gets the list of bindings that represent the dependencies of this binding.
         /// </summary>
@@ -34,13 +36,13 @@ namespace Lindi.Core.Bindings
         /// <summary>
         /// Gets the internal binding that is built by this lazy binding.
         /// </summary>
-        public IBindToConstructor<TInterface> Constructor => constructor.Value;
+        public IConstructorBinding<TInterface> Constructor => constructor.Value;
 
-        private readonly Lazy<IBindToConstructor<TInterface>> constructor;
+        private readonly Lazy<IConstructorBinding<TInterface>> constructor;
 
         protected LazyConstructorBinding()
         {
-            constructor = new Lazy<IBindToConstructor<TInterface>>(BuildConstructor);
+            constructor = new Lazy<IConstructorBinding<TInterface>>(BuildConstructor);
         }
 
         /// <summary>
@@ -68,13 +70,13 @@ namespace Lindi.Core.Bindings
             ConstructionExpression = constructionExpression;
         }
 
-        protected virtual IBindToConstructor<TInterface> BuildConstructor()
+        protected virtual IConstructorBinding<TInterface> BuildConstructor()
         {
-            if (Dependencies == null) throw new InvalidOperationException($"{nameof(Dependencies)} must be set before trying to build the final expression.");
-            if (ConstructionExpression == null) throw new InvalidOperationException($"{nameof(ConstructionExpression)} must be set before trying to build the final expression.");
+            if (Dependencies == null) throw new InvalidOperationException(string.Format(MustBeSetBeforeUseFormat, nameof(Dependencies)));
+            if (ConstructionExpression == null) throw new InvalidOperationException(string.Format(MustBeSetBeforeUseFormat, nameof(ConstructionExpression)));
             // Look through each dependency and inline it if possible
             var inliner = new DependencyInliner(Dependencies.ToArray());
-            return new BindToConstructor<TInterface>(inliner.InlineDependencies(ConstructionExpression.Body).Compile());
+            return new ConstructorBinding<TInterface>(inliner.InlineDependencies(ConstructionExpression.Body).Compile());
         }
 
         /// <summary>

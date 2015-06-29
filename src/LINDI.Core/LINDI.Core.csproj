@@ -53,12 +53,13 @@
   <ItemGroup>
     <Compile Include="Bindings\BaseBinding.cs" />
     <Compile Include="Bindings\BindingResolutionException.cs" />
-    <Compile Include="Bindings\BindToConstructor.cs" />
-    <Compile Include="Bindings\IBindToConstructor.cs" />
+    <Compile Include="Bindings\ConstructorBinding.cs" />
+    <Compile Include="Bindings\IConstructorBinding.cs" />
     <Compile Include="Bindings\ILazyConstructorBinding.cs" />
     <Compile Include="Bindings\LazyConstructorBinding.cs" />
     <Compile Include="Attributes\BindMethodAttribute.cs" />
     <Compile Include="Attributes\DependencyMethodAttribute.cs" />
+    <Compile Include="Bindings\ReferenceScopedBinding.cs" />
     <Compile Include="Bindings\ValueScopedBinding.cs" />
     <Compile Include="ExpressionHelpers.cs" />
     <Compile Include="IBinding.cs" />

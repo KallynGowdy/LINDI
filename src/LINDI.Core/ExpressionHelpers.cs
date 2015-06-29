@@ -160,5 +160,42 @@ namespace Lindi.Core
                 }
             );
         }
+
+        public static Expression TryGetValueFromDictionaryAndAddValueIfItDoesNotExist<TDictionary>(TDictionary dictionary, Expression key, ParameterExpression value, Expression newValue)
+        {
+            ConstantExpression valueToImplementationMap = Expression.Constant(dictionary);
+
+            // valueToImplementationMap.TryGetValue(key, out value)
+            var tryGetValueFromMap = Expression.Call(
+                valueToImplementationMap,
+                typeof(TDictionary).GetMethod("TryGetValue"),
+                key, value
+            );
+
+            // if(!tryGetValueFromMap) {
+            UnaryExpression notTryGetValueFromMap = Expression.Not(tryGetValueFromMap);
+
+
+            // if(notTryGetValueFromMap) {
+            //      lock(valueToImplementationMap) {
+            //           if(notTryGetValueFromMap) {
+            //              value = {newValue};
+            //              valueToImplementationMap.Add(key, value);
+            //           }
+            //      }
+            // }
+            return Expression.IfThen(notTryGetValueFromMap,
+                        Lock(valueToImplementationMap,
+                            Expression.Block(
+                                Expression.IfThen(notTryGetValueFromMap,
+                                    Expression.Block(
+                                        Expression.Assign(value, newValue),
+                                        Expression.Call(valueToImplementationMap, typeof(TDictionary).Method("Add"), key, value)
+                                    )
+                                )
+                            )
+                        )
+                    );
+        }
     }
 }

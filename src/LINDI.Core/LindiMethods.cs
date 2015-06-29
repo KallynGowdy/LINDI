@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Lindi.Core.Attributes;
@@ -37,6 +39,24 @@ namespace Lindi.Core
         public static TInterface Dependency<TInterface>([NotNull] IBinding<TInterface> binding)
         {
             return default(TInterface);
+        }
+
+        /// <summary>
+        /// Returns the current thread. Acts as a "shortcut" method for referencing the current thread for a scope.
+        /// </summary>
+        /// <returns><value>System.Threading.Thread.CurrentThread</value></returns>
+        public static Thread Thread()
+        {
+            return System.Threading.Thread.CurrentThread;
+        }
+
+        /// <summary>
+        /// Returns true. Acts as a "shortcut" method for putting a value into a singleton scope.
+        /// </summary>
+        /// <returns><value>true</value></returns>
+        public static bool Singleton()
+        {
+            return true;
         }
     }
 }

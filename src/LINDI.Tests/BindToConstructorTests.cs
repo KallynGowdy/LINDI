@@ -9,7 +9,7 @@ using Xunit;
 namespace Lindi.Tests
 {
     /// <summary>
-    /// Tests for <see cref="BindToConstructor{TInterface,TImplementer}"/>.
+    /// Tests for <see cref="ConstructorBinding{TInterface}"/>.
     /// </summary>
     public class BindToConstructorTests
     {
@@ -21,7 +21,7 @@ namespace Lindi.Tests
             {
                 return value;
             };
-            BindToConstructor<ISample> constructor = new BindToConstructor<ISample>(constructorFunc);
+            ConstructorBinding<ISample> constructor = new ConstructorBinding<ISample>(constructorFunc);
 
             ISample obj = constructor.Resolve();
 
