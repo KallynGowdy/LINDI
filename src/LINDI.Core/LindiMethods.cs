@@ -27,6 +27,18 @@ namespace Lindi.Core
         }
 
         /// <summary>
+        /// Returns a null binding for the given interface type.
+        /// Different syntax that is mostly used for setting up injections.
+        /// </summary>
+        /// <typeparam name="TInterface">The type that should be bound to a type that will be determined by the future operations applied to it.</typeparam>
+        /// <returns>Null</returns>
+        [BindMethod]
+        public static IBinding<object> Inject()
+        {
+            return null;
+        }
+
+            /// <summary>
         /// Represents the definition of a dependency on the given binding.
         /// This method returns the default value of the interface type. It is used
         /// as a stub method in expression to signal that the given binding should be used to resolve certain values.
@@ -39,6 +51,16 @@ namespace Lindi.Core
         public static TInterface Dependency<TInterface>([NotNull] IBinding<TInterface> binding)
         {
             return default(TInterface);
+        }
+
+        public static object InjectedInto<TInterface>(TInterface value)
+        {
+            return null;
+        }
+
+        public static TInjectedInto IsInjectedInto<TInjectedInto>()
+        {
+            return default(TInjectedInto);
         }
 
         /// <summary>

@@ -63,8 +63,10 @@
     <Compile Include="Bindings\ValueScopedBinding.cs" />
     <Compile Include="ExpressionHelpers.cs" />
     <Compile Include="IBinding.cs" />
+    <Compile Include="IInjectValuesInto.cs" />
     <Compile Include="LindiMethods.cs" />
     <Compile Include="Linq\BindingExtensions.cs" />
+    <Compile Include="Bindings\InjectValuesInto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

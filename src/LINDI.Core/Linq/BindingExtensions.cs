@@ -60,9 +60,22 @@ namespace Lindi.Core.Linq
             return Wrap(binding, b);
         }
 
-        public static IBinding<T> Where<T>(this IBinding<T> t, Func<object, bool> e)
+        public static IInjectValuesInto<TInjectedInto> Select<TInjectedInto>(this IInjectValuesInto<TInjectedInto> binding, Action<TInjectedInto> injectFunc)
         {
             return null;
+        }
+
+        /// <summary>
+        /// Builds on the given binding by creating an injection that can inject values into a object specified by the given expression.
+        /// </summary>
+        /// <typeparam name="TInterface">The type of values that are being injected.</typeparam>
+        /// <typeparam name="TInjectedInto">The type of objects that the values should be injected into.</typeparam>
+        /// <param name="binding">The binding that should be used to resolve new values.</param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static IInjectValuesInto<TInjectedInto> Where<TInterface, TInjectedInto>(this IBinding<TInterface> binding, Expression<Func<TInterface, TInjectedInto>> expression)
+        {
+            return new InjectValuesInto<TInjectedInto>();
         }
 
         /// <summary>

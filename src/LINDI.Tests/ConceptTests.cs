@@ -18,15 +18,16 @@ namespace Lindi.Tests
             IBinding<ISample> b6 = from type in Bind<ISample>()
                      select new Sample(default(object));
 
-            // Conditional binding
-            // Bind ISample to OtherSample only if the given function is true
-            IBinding<ISample> b1 = from type in Bind<ISample>()
-                     where Environment.Is64BitOperatingSystem // Only bind if we are running on a 64 bit operating system
-                     select type as OtherSample;
-            // Bind ISample to Sample if it is being injected into IHasSample
-            IBinding<ISample> b4 = from type in Bind<ISample>()
-                     where type is IHasSample
-                     select type as Sample;
+            //// Conditional binding
+            //// Bind ISample to OtherSample only if the given function is true
+            //IBinding<ISample> b1 = from type in Bind<ISample>()
+            //         where Environment.Is64BitOperatingSystem // Only bind if we are running on a 64 bit operating system
+            //         select type as OtherSample;
+
+            //// Bind ISample to Sample if it is being injected into IHasSample
+            //IBinding<ISample> b4 = from type in Bind<ISample>()
+            //         where type is IHasSample
+            //         select type as Sample;
 
             // TODO: Add case for merging multiple bindings for the same interface into a single binding that
             //       allows ordering for priority (which to check first)
