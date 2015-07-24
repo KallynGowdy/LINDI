@@ -24,7 +24,10 @@ namespace Lindi.Tests
 
             IInjectValuesInto<INeedSample> binding = from value in Inject()
                                                      where InjectedInto(value) as INeedSample
-                                                     select value.Sample = sampleBinding.Resolve();
+                                                     select new NeedSample()
+                                                     {
+                                                         Sample = Dependency(sampleBinding)
+                                                     };
 
             NeedSample needSample = new NeedSample();
 

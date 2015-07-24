@@ -38,7 +38,23 @@ namespace Lindi.Core
             return null;
         }
 
-            /// <summary>
+        /// <summary>
+        /// Represents the definition of a dependency on the given binding.
+        /// This method returns the default value of the interface type. It is used
+        /// as a stub method in expression to signal that the given binding should be used to resolve certain values.
+        /// </summary>
+        /// <typeparam name="TInterface"></typeparam>
+        /// <param name="binding">The binding that should be used as a dependency for the parameter it is being passed as an argument for.</param>
+        /// <returns>default(TInterface)</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null" />.</exception>
+        [DependencyMethod]
+        public static TInterface AsDependency<TInterface>([NotNull] this IBinding<TInterface> binding)
+        {
+            if (binding == null) throw new ArgumentNullException(nameof(binding));
+            return default(TInterface);
+        }
+
+        /// <summary>
         /// Represents the definition of a dependency on the given binding.
         /// This method returns the default value of the interface type. It is used
         /// as a stub method in expression to signal that the given binding should be used to resolve certain values.
@@ -50,6 +66,7 @@ namespace Lindi.Core
         [DependencyMethod]
         public static TInterface Dependency<TInterface>([NotNull] IBinding<TInterface> binding)
         {
+            if (binding == null) throw new ArgumentNullException(nameof(binding));
             return default(TInterface);
         }
 

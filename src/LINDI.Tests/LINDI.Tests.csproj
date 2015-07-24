@@ -62,7 +62,6 @@
     <Compile Include="AwaitableBindingTests.cs" />
     <Compile Include="BindingResolutionExceptionTests.cs" />
     <Compile Include="BindToConstructorTests.cs" />
-    <Compile Include="ConceptTests.cs" />
     <Compile Include="HasSample.cs" />
     <Compile Include="IHasSample.cs" />
     <Compile Include="ISample.cs" />
