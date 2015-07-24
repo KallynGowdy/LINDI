@@ -5,6 +5,83 @@ Language Integrated Dependency Injection ([LINQified][linq] [DI][di])
 
 Better and more natural way of defining dependencies in .Net, LINDI is a language extension that takes advantage of [LINQ][linq] to specify Dependency Resolution.
 
+#Example
+
+```csharp
+using Lindi.Core;
+using Lindi.Core.Bindings;
+using Lindi.Core.Linq;
+using static Lindi.Core.LindiMethods; // C# 6
+// ...
+// Basic Binding (Bind IFoo to Foo with "name")
+var fooBinding = from foo in Bind<IFoo>()
+                 select new Foo("name");
+
+IFoo foo = fooBinding.Resolve();
+
+Assert.NotNull(foo);
+Assert.Equal("name", foo.Name);
+
+// Dependency Resolution (Bind IBar to Bar using fooBinding)
+var barBinding = from bar in Bind<IBar>()
+                 select new Bar(Dependency(fooBinding));
+
+IBar bar = barBinding.Resolve();
+
+Assert.NotNull(bar);
+Assert.NotNull(bar.Foo);
+Assert.Equal("name", bar.Foo);
+
+// Scopes (Bind IFoo to Foo using and reusing foo)
+var otherFooBinding = from foo in Bind<IFoo>()
+                      group by Singleton() into scope
+                      select foo;
+
+var otherBarBinding = from bar in Bind<IBar>()
+                      select new Bar(Dependency(otherFooBinding));
+
+IBar otherBar1 = otherBarBinding.Resolve();
+IBar otherBar2 = otherBarBinding.Resolve();
+
+Assert.Same(foo, otherBar1.Foo);
+Assert.Same(foo, otherBar2.Foo);
+
+// LINQ method syntax works too!
+var anotherFooBinding = Bind<IFoo>().Select(foo => new Foo("I'm a Foo!"));
+anotherFooBinding = from foo in Bind<IFoo>() select new Foo("I'm a Foo!");
+
+// Interfaces and classes (POCOs)...
+public interface IFoo
+{
+    string Name { get; }
+}
+
+public class Foo : IFoo
+{
+    public Foo(string name)
+    {
+      Name = name;
+    }
+
+    public string Name { get; private set; }
+}
+
+public interface IBar
+{
+    IFoo Foo { get; }
+}
+
+public class Bar : IBar
+{
+    public Bar(IFoo foo)
+    {
+      Foo = foo;
+    }
+
+    public IFoo Foo { get; private set; }
+}
+```
+
 #Features
 
 - [x] Create bindings between super types and their respective derived types
