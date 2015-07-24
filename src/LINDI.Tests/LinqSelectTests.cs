@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using Xunit;
 using Lindi.Core;
 using Lindi.Core.Bindings;
 using Lindi.Core.Linq;
-using Xunit;
 using static Lindi.Core.LindiMethods;
 
 namespace Lindi.Tests
@@ -96,7 +92,7 @@ namespace Lindi.Tests
             Assert.Throws<ArgumentNullException>(() =>
             {
                 IBinding<ISample> sampleBinding = from value in Bind<ISample>()
-                                                  select new Sample()
+                                                  select new Sample
                                                   {
                                                       Obj = Dependency(hasSampleBinding)
                                                   };

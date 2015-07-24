@@ -1,7 +1,6 @@
 ﻿using System;
 using Lindi.Core;
 using Lindi.Core.Linq;
-using Xunit;
 using static Lindi.Core.LindiMethods;
 
 namespace Lindi.Tests

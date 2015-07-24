@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using Lindi.Core;
 using Lindi.Core.Bindings;
 using Lindi.Core.Linq;
 using Xunit;
 using static Lindi.Core.LindiMethods;
-using Thread = System.Threading.Thread;
 
 namespace Lindi.Tests
 {
