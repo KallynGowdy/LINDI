@@ -62,12 +62,15 @@
     <Compile Include="Core\AwaitableBindingTests.cs" />
     <Compile Include="Core\Bindings\BaseBindingTests.cs" />
     <Compile Include="Core\Bindings\BindingResolutionExceptionTests.cs" />
-    <Compile Include="Core\Bindings\BindToConstructorTests.cs" />
+    <Compile Include="Core\Bindings\ConstructorBindingTests.cs" />
+    <Compile Include="Core\Bindings\InjectValuesIntoTests.cs" />
+    <Compile Include="Core\Bindings\ReferenceScopedBindingTests.cs" />
+    <Compile Include="Core\Bindings\ValueScopedBindingTests.cs" />
     <Compile Include="Core\ExpressionHelpersTests.cs" />
     <Compile Include="Core\HasSample.cs" />
     <Compile Include="Core\IHasSample.cs" />
     <Compile Include="Core\ISample.cs" />
-    <Compile Include="Core\Bindings\LazyBindToConstructorTests.cs" />
+    <Compile Include="Core\Bindings\LazyConstructorBindingTests.cs" />
     <Compile Include="Core\Linq\LinqGroupByTests.cs" />
     <Compile Include="Core\Linq\LinqSelectTests.cs" />
     <Compile Include="Core\Linq\LinqWhereTests.cs" />

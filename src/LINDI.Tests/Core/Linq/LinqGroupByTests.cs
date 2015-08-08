@@ -3,6 +3,7 @@ using Lindi.Core;
 using Lindi.Core.Bindings;
 using Lindi.Core.Linq;
 using Xunit;
+using static Lindi.Core.LindiMethods;
 using Thread = System.Threading.Thread;
 
 namespace Lindi.Tests.Core.Linq
@@ -16,7 +17,7 @@ namespace Lindi.Tests.Core.Linq
         public void Test_Grouped_Binding_Creates_New_Scoped_Binding_For_Given_Reference_Value()
         {
             object val = new object();
-            IBinding<ISample> binding = from type in LindiMethods.Bind<ISample>()
+            IBinding<ISample> binding = from type in Bind<ISample>()
                                         group type by val into scope
                                         select new Sample();
 
@@ -29,7 +30,7 @@ namespace Lindi.Tests.Core.Linq
         {
             object val = new object();
             Sample expectedValue = new Sample();
-            IBinding<ISample> binding = from type in LindiMethods.Bind<ISample>()
+            IBinding<ISample> binding = from type in Bind<ISample>()
                                         group type by val into scope
                                         select expectedValue;
 
@@ -42,7 +43,7 @@ namespace Lindi.Tests.Core.Linq
         public void Test_Grouped_Binding_Reuses_Value()
         {
             object val = new object();
-            IBinding<ISample> binding = from type in LindiMethods.Bind<ISample>()
+            IBinding<ISample> binding = from type in Bind<ISample>()
                                         group type by val into scope
                                         select new Sample();
 
@@ -58,7 +59,7 @@ namespace Lindi.Tests.Core.Linq
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-                IBinding<ISample> binding = LindiMethods.Bind<ISample>().GroupBy<ISample, object>(null).Select(scope => new Sample());
+                IBinding<ISample> binding = Bind<ISample>().GroupBy<ISample, object>(null).Select(scope => new Sample());
             });
         }
 
@@ -67,7 +68,7 @@ namespace Lindi.Tests.Core.Linq
         {
             object val = new object();
 
-            IBinding<ISample> binding = from type in LindiMethods.Bind<ISample>()
+            IBinding<ISample> binding = from type in Bind<ISample>()
                                         group type by val into scope
                                         select new Sample();
 
@@ -91,7 +92,7 @@ namespace Lindi.Tests.Core.Linq
             {
                 object val = new object(); // Use value, this could be anything (HttpContext, Thread, etc.)
 
-                IBinding<ISample> binding = from type in LindiMethods.Bind<ISample>()
+                IBinding<ISample> binding = from type in Bind<ISample>()
                                             group type by val into scope
                                             select new Sample();
 
@@ -109,7 +110,7 @@ namespace Lindi.Tests.Core.Linq
         [Fact]
         public void Test_Grouping_By_True_Creates_New_ValueScopedBinding()
         {
-            IBinding<ISample> binding = from type in LindiMethods.Bind<ISample>()
+            IBinding<ISample> binding = from type in Bind<ISample>()
                                         group type by true into scope
                                         select new Sample();
 
@@ -120,7 +121,7 @@ namespace Lindi.Tests.Core.Linq
         [Fact]
         public void Test_ValueScopedBinding_Can_Resolve_Values()
         {
-            IBinding<ISample> binding = from type in LindiMethods.Bind<ISample>()
+            IBinding<ISample> binding = from type in Bind<ISample>()
                                         group type by true into scope
                                         select new Sample();
 
@@ -132,7 +133,7 @@ namespace Lindi.Tests.Core.Linq
         [Fact]
         public void Test_ValueScopedBinding_Produces_Same_Value_For_Same_Selected_Value()
         {
-            IBinding<ISample> binding = from type in LindiMethods.Bind<ISample>()
+            IBinding<ISample> binding = from type in Bind<ISample>()
                                         group type by true into scope
                                         select new Sample();
 
@@ -148,7 +149,7 @@ namespace Lindi.Tests.Core.Linq
         {
             bool b = true;
             Func<bool> selector = () => (b = !b);
-            IBinding<ISample> binding = from type in LindiMethods.Bind<ISample>()
+            IBinding<ISample> binding = from type in Bind<ISample>()
                                         group type by selector() into scope
                                         select new Sample();
 
@@ -162,8 +163,8 @@ namespace Lindi.Tests.Core.Linq
         [Fact]
         public void Test_Group_By_Singleton_Produces_Same_Value_Every_Time()
         {
-            IBinding<ISample> binding = from type in LindiMethods.Bind<ISample>()
-                                        group type by LindiMethods.Singleton() into scope
+            IBinding<ISample> binding = from type in Bind<ISample>()
+                                        group type by Singleton() into scope
                                         select new Sample();
 
             ISample value = binding.Resolve();
@@ -176,8 +177,8 @@ namespace Lindi.Tests.Core.Linq
         [Fact]
         public void Test_Group_By_Thread_Produces_Same_Value_Inside_Same_Thread()
         {
-            IBinding<ISample> binding = from type in LindiMethods.Bind<ISample>()
-                                        group type by LindiMethods.Thread() into scope
+            IBinding<ISample> binding = from type in Bind<ISample>()
+                                        group type by Thread() into scope
                                         select new Sample();
             ISample value = null;
             ISample otherValue = null;
@@ -198,8 +199,8 @@ namespace Lindi.Tests.Core.Linq
         [Fact]
         public void Test_Group_By_Thread_Produces_Different_Value_On_Different_Threads()
         {
-            IBinding<ISample> binding = from type in LindiMethods.Bind<ISample>()
-                                        group type by LindiMethods.Thread() into scope
+            IBinding<ISample> binding = from type in Bind<ISample>()
+                                        group type by Thread() into scope
                                         select new Sample();
             ISample value = null;
             ISample otherValue = null;
