@@ -76,7 +76,7 @@ namespace Lindi.Core
         [ExcludeFromCodeCoverage]
         public static object InjectedInto<TInterface>(TInterface value)
         {
-            return null;
+            return value;
         }
 
         [ExcludeFromCodeCoverage]

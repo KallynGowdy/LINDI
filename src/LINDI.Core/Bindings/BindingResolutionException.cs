@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 using JetBrains.Annotations;
 
 namespace Lindi.Core.Bindings
@@ -7,6 +8,7 @@ namespace Lindi.Core.Bindings
     /// Defines a class that represents an exception that is thrown when a binding does not resolve
     /// properly. Be sure to check the inner exception for details on what actually happened.
     /// </summary>
+    [Serializable]
     public class BindingResolutionException : Exception
     {
         /// <summary>
@@ -38,6 +40,17 @@ namespace Lindi.Core.Bindings
         {
             if (bindingType == null) throw new ArgumentNullException(nameof(bindingType));
             BindingType = bindingType;
+        }
+
+        protected BindingResolutionException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            BindingType = (Type) info.GetValue(nameof(BindingType), typeof(Type));
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue(nameof(BindingType), this.BindingType, typeof(Type));
         }
     }
 }

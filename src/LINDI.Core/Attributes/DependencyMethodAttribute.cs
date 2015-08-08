@@ -6,7 +6,7 @@ namespace Lindi.Core.Attributes
     /// Defines an attribute that marks a method as a stub for a binding dependency.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class DependencyMethodAttribute : Attribute
+    public sealed class DependencyMethodAttribute : Attribute
     {
     }
 }
