@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Lindi.Core;
+using Lindi.Core.Bindings;
 using Lindi.Core.Linq;
 using Xunit;
 using static Lindi.Core.LindiMethods;
@@ -16,18 +17,33 @@ namespace Lindi.Tests
     public class LinqWhereTests
     {
         [Fact]
+        public void Test_Where_Without_Select_Returns_Incomplete_Injection()
+        {
+            Sample s = new Sample();
+
+            IInjectValuesInto<INeedSample> binding = Inject()
+                                                        .Where(v => InjectedInto(v) as INeedSample);
+            NeedSample needSample = new NeedSample();
+
+            Assert.Throws<BindingResolutionException>(() =>
+            {
+                binding.Inject(needSample);
+            });
+        }
+
+        [Fact]
         public void Test_Where_Is_Able_To_Inject_Values_Into_Type()
         {
             Sample s = new Sample();
             IBinding<ISample> sampleBinding = from value in Bind<ISample>()
                                               select s;
 
-            IInjectValuesInto<INeedSample> binding = from value in Inject()
-                                                     where InjectedInto(value) as INeedSample
-                                                     select new NeedSample()
-                                                     {
-                                                         Sample = Dependency(sampleBinding)
-                                                     };
+            IInjectValuesInto<INeedSample> binding = Inject()
+                                                        .Where(v => InjectedInto(v) as INeedSample)
+                                                        .Select(value =>
+                                                        {
+                                                            value.Sample = sampleBinding.Resolve();
+                                                        });
 
             NeedSample needSample = new NeedSample();
 
@@ -59,6 +75,9 @@ namespace Lindi.Tests
             NeedSample needsSample = new NeedSample();
 
             injector.Inject(needsSample);
+
+            Assert.Same(s, needsSample.Sample);
+            Assert.Equal(i, needsSample.Int);
         }
 
     }

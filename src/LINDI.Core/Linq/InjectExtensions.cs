@@ -24,15 +24,16 @@ namespace Lindi.Core.Linq
         /// <remarks>
         /// 
         /// </remarks>
-        public static IInjectValuesInto<TInjectedInto> Select<TInjectedInto, TInstance>(this IInjectValuesInto<TInjectedInto> binding, Expression<Func<TInjectedInto, TInstance>> injectExpression)
-            where TInstance : TInjectedInto
-        {
-            return null;
-        }
+        //public static IInjectValuesInto<TInjectedInto> Select<TInjectedInto, TInstance>(this IInjectValuesInto<TInjectedInto> binding, Expression<Func<TInjectedInto, TInstance>> injectExpression)
+        //    where TInstance : TInjectedInto
+        //{
+        //    return null;
+        //}
 
-        public static IInjectValuesInto<TInjectedInto> Select<TInjectedInto>(this IInjectValuesInto<TInjectedInto> binding, Action<TInjectedInto> injectFunc)
+        public static IInjectValuesInto<TInjectedInto> Select<TInjectedInto>(this InjectValuesInto<TInjectedInto> binding, Action<TInjectedInto> injectFunc)
         {
-            return null;
+            binding.InjectionFunction = injectFunc;
+            return binding;
         }
 
         /// <summary>
@@ -43,7 +44,7 @@ namespace Lindi.Core.Linq
         /// <param name="binding">The injection that should be used to resolve new values.</param>
         /// <param name="expression">An expression that identifies the type of objects that the injection applies to.</param>
         /// <returns>Returns a new <see cref="IInjectValuesInto{TInjectedInto}"/> object that has yet to be "completed."</returns>
-        public static IInjectValuesInto<TInjectedInto> Where<TInterface, TInjectedInto>(this IBinding<TInterface> binding, Expression<Func<TInterface, TInjectedInto>> expression)
+        public static InjectValuesInto<TInjectedInto> Where<TInterface, TInjectedInto>(this IBinding<TInterface> binding, Expression<Func<TInterface, TInjectedInto>> expression)
         {
             return new InjectValuesInto<TInjectedInto>();
         }
