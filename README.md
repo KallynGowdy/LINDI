@@ -86,7 +86,7 @@ public class Bar : IBar
 
 - [x] Create bindings between super types and their respective derived types
 - [x] Bindings created using LINQ expressions are inlined for performance benefits
-- [ ] Conditional Bindings
+- [x] Conditional Bindings
 - [x] Binding Scopes
 - [ ] Automatic Factory Generation
 - [x] `await` keyword for resolving dependencies
