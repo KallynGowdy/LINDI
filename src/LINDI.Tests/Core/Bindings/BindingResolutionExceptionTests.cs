@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Lindi.Core.Bindings;
 using Xunit;
 
-namespace Lindi.Tests
+namespace Lindi.Tests.Core.Bindings
 {
     /// <summary>
     /// Tests for <see cref="BindingResolutionException"/>.

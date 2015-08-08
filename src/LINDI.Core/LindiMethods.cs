@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -48,6 +49,7 @@ namespace Lindi.Core
         /// <returns>default(TInterface)</returns>
         /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null" />.</exception>
         [DependencyMethod]
+        [ExcludeFromCodeCoverage]
         public static TInterface AsDependency<TInterface>([NotNull] this IBinding<TInterface> binding)
         {
             if (binding == null) throw new ArgumentNullException(nameof(binding));
@@ -64,17 +66,20 @@ namespace Lindi.Core
         /// <returns>default(TInterface)</returns>
         /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null" />.</exception>
         [DependencyMethod]
+        [ExcludeFromCodeCoverage]
         public static TInterface Dependency<TInterface>([NotNull] IBinding<TInterface> binding)
         {
             if (binding == null) throw new ArgumentNullException(nameof(binding));
             return default(TInterface);
         }
 
+        [ExcludeFromCodeCoverage]
         public static object InjectedInto<TInterface>(TInterface value)
         {
             return null;
         }
 
+        [ExcludeFromCodeCoverage]
         public static TInjectedInto IsInjectedInto<TInjectedInto>()
         {
             return default(TInjectedInto);

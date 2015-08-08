@@ -59,19 +59,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AwaitableBindingTests.cs" />
-    <Compile Include="BindingResolutionExceptionTests.cs" />
-    <Compile Include="BindToConstructorTests.cs" />
-    <Compile Include="HasSample.cs" />
-    <Compile Include="IHasSample.cs" />
-    <Compile Include="ISample.cs" />
-    <Compile Include="LazyBindToConstructorTests.cs" />
-    <Compile Include="LinqGroupByTests.cs" />
-    <Compile Include="LinqSelectTests.cs" />
-    <Compile Include="LinqWhereTests.cs" />
-    <Compile Include="OtherSample.cs" />
+    <Compile Include="Core\AwaitableBindingTests.cs" />
+    <Compile Include="Core\Bindings\BaseBindingTests.cs" />
+    <Compile Include="Core\Bindings\BindingResolutionExceptionTests.cs" />
+    <Compile Include="Core\Bindings\BindToConstructorTests.cs" />
+    <Compile Include="Core\ExpressionHelpersTests.cs" />
+    <Compile Include="Core\HasSample.cs" />
+    <Compile Include="Core\IHasSample.cs" />
+    <Compile Include="Core\ISample.cs" />
+    <Compile Include="Core\Bindings\LazyBindToConstructorTests.cs" />
+    <Compile Include="Core\Linq\LinqGroupByTests.cs" />
+    <Compile Include="Core\Linq\LinqSelectTests.cs" />
+    <Compile Include="Core\Linq\LinqWhereTests.cs" />
+    <Compile Include="Core\OtherSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sample.cs" />
+    <Compile Include="Core\Sample.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
