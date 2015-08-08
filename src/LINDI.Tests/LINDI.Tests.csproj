@@ -59,19 +59,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AwaitableBindingTests.cs" />
-    <Compile Include="BindingResolutionExceptionTests.cs" />
-    <Compile Include="BindToConstructorTests.cs" />
-    <Compile Include="ConceptTests.cs" />
-    <Compile Include="HasSample.cs" />
-    <Compile Include="IHasSample.cs" />
-    <Compile Include="ISample.cs" />
-    <Compile Include="LazyBindToConstructorTests.cs" />
-    <Compile Include="LinqGroupByTests.cs" />
-    <Compile Include="LinqSelectTests.cs" />
-    <Compile Include="OtherSample.cs" />
+    <Compile Include="Core\AwaitableBindingTests.cs" />
+    <Compile Include="Core\Bindings\BaseBindingTests.cs" />
+    <Compile Include="Core\Bindings\BindingResolutionExceptionTests.cs" />
+    <Compile Include="Core\Bindings\ConstructorBindingTests.cs" />
+    <Compile Include="Core\Bindings\InjectValuesIntoTests.cs" />
+    <Compile Include="Core\Bindings\ReferenceScopedBindingTests.cs" />
+    <Compile Include="Core\Bindings\ValueScopedBindingTests.cs" />
+    <Compile Include="Core\ExpressionHelpersTests.cs" />
+    <Compile Include="Core\HasSample.cs" />
+    <Compile Include="Core\IHasSample.cs" />
+    <Compile Include="Core\ISample.cs" />
+    <Compile Include="Core\Bindings\LazyConstructorBindingTests.cs" />
+    <Compile Include="Core\Linq\LinqGroupByTests.cs" />
+    <Compile Include="Core\Linq\LinqSelectTests.cs" />
+    <Compile Include="Core\Linq\LinqWhereTests.cs" />
+    <Compile Include="Core\OtherSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sample.cs" />
+    <Compile Include="Core\Sample.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -81,6 +86,9 @@
       <Project>{b07602f9-109b-4e41-9c5a-c5e0e4c9b6e8}</Project>
       <Name>Lindi.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -2,9 +2,8 @@
 using Lindi.Core;
 using Lindi.Core.Linq;
 using Xunit;
-using static Lindi.Core.LindiMethods;
 
-namespace Lindi.Tests
+namespace Lindi.Tests.Core
 {
     public class AwaitableBindingTests
     {
@@ -12,7 +11,7 @@ namespace Lindi.Tests
         [Fact]
         public async void Test_Binding_Is_Awaitable()
         {
-            var binding = from value in Bind<ISample>()
+            var binding = from value in LindiMethods.Bind<ISample>()
                           select new Sample();
 
             var v = await binding;

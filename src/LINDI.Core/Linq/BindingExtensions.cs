@@ -60,11 +60,6 @@ namespace Lindi.Core.Linq
             return Wrap(binding, b);
         }
 
-        public static IBinding<T> Where<T>(this IBinding<T> t, Func<object, bool> e)
-        {
-            return null;
-        }
-
         /// <summary>
         /// Builds on the given binding by grouping newly created values by the values returned by the given <paramref name="valueSelector"/>.
         /// The <paramref name="valueSelector"/> is used to point to an ambient value that can change depending on the calling context.

@@ -1,4 +1,4 @@
-﻿namespace Lindi.Tests
+﻿namespace Lindi.Tests.Core
 {
     public interface ISample
     {

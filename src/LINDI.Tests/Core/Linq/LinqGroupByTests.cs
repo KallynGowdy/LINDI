@@ -6,7 +6,7 @@ using Lindi.Core.Linq;
 using Xunit;
 using static Lindi.Core.LindiMethods;
 
-namespace Lindi.Tests
+namespace Lindi.Tests.Core.Linq
 {
     /// <summary>
     /// Tests for <see cref="BindingExtensions.GroupBy{TInterface,TValue}"/>.
