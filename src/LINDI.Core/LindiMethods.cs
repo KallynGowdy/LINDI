@@ -32,6 +32,22 @@ namespace Lindi.Core
 
         /// <summary>
         /// Returns a null binding for the given interface type.
+        /// The reason why this returns null is because it is a type-hack. It allows the Select, Where, Group By, etc. extension methods
+        /// to operate on it without actually containing any logic.
+        /// </summary>
+        /// <typeparam name="TInterface">The type that should be bound to a type that will be determined by the future operations applied to it.</typeparam>
+        /// <returns>Null</returns>
+        /// <remarks>
+        /// This method is exactly the same as <see cref="Bind{TInterface}"/>, but provides a different syntax that may be preferable to some people.
+        /// </remarks>
+        [BindMethod]
+        public static IBinding<TInterface> Bindings<TInterface>()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Returns a null binding for the given interface type.
         /// Different syntax that is mostly used for setting up injections.
         /// </summary>
         /// <returns>Null</returns>
