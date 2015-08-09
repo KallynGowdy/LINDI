@@ -32,12 +32,21 @@ namespace Lindi.Core.Bindings
         Func<TValue> valueSelector;
         Dictionary<TValue, TInterface> valueToImplementationMap = new Dictionary<TValue, TInterface>();
 
+        /// <summary>
+        /// Creates a new <see cref="ValueScopedBinding{TInterface,TValue}"/> object.
+        /// </summary>
+        /// <param name="valueSelector">The function that retrieves the value that generated values should be "scoped" by.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public ValueScopedBinding([NotNull] Func<TValue> valueSelector) : base(new IBinding[0], bindings => null)
         {
             if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
             this.valueSelector = valueSelector;
         }
 
+        /// <summary>
+        /// Sets the given binding for this deferred binding.
+        /// </summary>
+        /// <param name="binding">The binding that should be used for internal resolution.</param>
         public void SetBinding(IBinding<TInterface> binding)
         {
             if (binding == null) throw new ArgumentNullException(nameof(binding));

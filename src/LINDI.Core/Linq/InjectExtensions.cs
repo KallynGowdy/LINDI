@@ -17,19 +17,9 @@ namespace Lindi.Core.Linq
         /// Finishes the injections for the given binding, using the injections defined in the given expression.
         /// </summary>
         /// <typeparam name="TInjectedInto">The type that the values are being injected into.</typeparam>
-        /// <typeparam name="TInstance">The type of the instance that is being used as the mental vessel for injecting values into a <typeparamref name="TInjectedInto"/> value.</typeparam>
         /// <param name="binding">The type of the injection that should be finished</param>
-        /// <param name="injectExpression">The expression that specifies how the values should injected.</param>
+        /// <param name="injectFunc">The function that specifies how the values should injected.</param>
         /// <returns>Returns a completed <see cref="IInjectValuesInto{TInjectedInto}"/> object that can be used to inject values into objects.</returns>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        //public static IInjectValuesInto<TInjectedInto> Select<TInjectedInto, TInstance>(this IInjectValuesInto<TInjectedInto> binding, Expression<Func<TInjectedInto, TInstance>> injectExpression)
-        //    where TInstance : TInjectedInto
-        //{
-        //    return null;
-        //}
-
         public static IInjectValuesInto<TInjectedInto> Select<TInjectedInto>(this InjectValuesInto<TInjectedInto> binding, Action<TInjectedInto> injectFunc)
         {
             binding.InjectionFunction = injectFunc;

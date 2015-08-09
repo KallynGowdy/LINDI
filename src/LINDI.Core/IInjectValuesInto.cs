@@ -21,6 +21,7 @@ namespace Lindi.Core
     /// Defines an interface that wraps a binding and is able to inject values into a given object of a given type.
     /// </summary>
     /// <typeparam name="TInterface">The type of values that are being injected into the given objects.</typeparam>
+    /// <typeparam name="TInjectedInto">The type of object that the values will be injected into.</typeparam>
     public interface IInjectValuesInto<out TInterface, in TInjectedInto> : IInjectValuesInto<TInjectedInto>
     {
         /// <summary>

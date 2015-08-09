@@ -39,8 +39,8 @@ namespace Lindi.Core.Linq
         /// Declare a binding to a constructor-like function:
         /// 
         /// <code>
-        /// IBinding<TInterface> finalBinding = b.Select(type => new TImplementer());
-        /// IBinding<TInterface> finalBinding = from type in b select new TImplementer();
+        /// IBinding&lt;TInterface&gt; finalBinding = b.Select(type => new TImplementer());
+        /// IBinding&lt;TInterface&gt; finalBinding = from type in b select new TImplementer();
         /// </code>
         /// </example>
         /// <returns>

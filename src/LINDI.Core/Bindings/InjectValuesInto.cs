@@ -2,6 +2,10 @@ using System;
 
 namespace Lindi.Core.Bindings
 {
+    /// <summary>
+    /// Defines a class that provides a basic implementation of <see cref="IInjectValuesInto{TInjectedInto}"/>.
+    /// </summary>
+    /// <typeparam name="TInjectedInto">The type that the values should be injected into.</typeparam>
     public class InjectValuesInto<TInjectedInto> : IInjectValuesInto<TInjectedInto>
     {
         private Action<TInjectedInto> injectionFunction;
@@ -22,6 +26,11 @@ namespace Lindi.Core.Bindings
             }
         }
 
+        /// <summary>
+        /// Injects the configured values into the given object.
+        /// </summary>
+        /// <param name="injectedInto">The object that the values should be injected into.</param>
+        /// <exception cref="BindingResolutionException">Thrown if the values were not able to be injected into the given object.</exception>
         public void Inject(TInjectedInto injectedInto)
         {
             if (InjectionFunction == null)

@@ -42,12 +42,20 @@ namespace Lindi.Core.Bindings
 
         ConditionalWeakTable<TValue, TInterface> valueToImplementationMap = new ConditionalWeakTable<TValue, TInterface>();
 
+        /// <summary>
+        /// Creates a new <see cref="ReferenceScopedBinding{TInterface,TValue}"/>.
+        /// </summary>
+        /// <param name="valueSelector">The function that retrieves the values that the generated values should be scoped by.</param>
         public ReferenceScopedBinding([NotNull] Func<TValue> valueSelector) : base(new IBinding[0], bindings => null)
         {
             if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
             this.valueSelector = valueSelector;
         }
 
+        /// <summary>
+        /// Sets the given binding for this deferred binding.
+        /// </summary>
+        /// <param name="binding">The binding that should be used for internal resolution.</param>
         public void SetBinding(IBinding<TInterface> binding)
         {
             if (binding == null) throw new ArgumentNullException(nameof(binding));

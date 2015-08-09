@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Fasterflect;
 using JetBrains.Annotations;
+using Lindi.Core.Attributes;
 
 namespace Lindi.Core.Bindings
 {
@@ -40,6 +41,9 @@ namespace Lindi.Core.Bindings
 
         private readonly Lazy<IConstructorBinding<TInterface>> constructor;
 
+        /// <summary>
+        /// Creates a new <see cref="LazyConstructorBinding{TInterface}"/> that doesn't have any values.
+        /// </summary>
         protected LazyConstructorBinding()
         {
             constructor = new Lazy<IConstructorBinding<TInterface>>(BuildConstructor);
@@ -70,6 +74,11 @@ namespace Lindi.Core.Bindings
             ConstructionExpression = constructionExpression;
         }
 
+        /// <summary>
+        /// Creates a new <see cref="IConstructorBinding{TInterface}"/> from the expression and dependencies contained in this object.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         protected virtual IConstructorBinding<TInterface> BuildConstructor()
         {
             if (Dependencies == null) throw new InvalidOperationException(string.Format(MustBeSetBeforeUseFormat, nameof(Dependencies)));
@@ -116,6 +125,11 @@ namespace Lindi.Core.Bindings
                 this.dependencies = dependencies;
             }
 
+            /// <summary>
+            /// Inlines all of the calls to methods decorated with the <see cref="DependencyMethodAttribute"/> that are contained in the given expression.
+            /// </summary>
+            /// <param name="expression"></param>
+            /// <returns></returns>
             public Expression<Func<TInterface>> InlineDependencies(Expression expression)
             {
                 return Expression.Lambda<Func<TInterface>>(InlineDependenciesImpl(expression));
@@ -126,6 +140,13 @@ namespace Lindi.Core.Bindings
                 return Visit(expression);
             }
 
+            /// <summary>
+            /// Visits the children of the <see cref="T:System.Linq.Expressions.MethodCallExpression"/>.
+            /// </summary>
+            /// <returns>
+            /// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
+            /// </returns>
+            /// <param name="node">The expression to visit.</param>
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
                 if (node.Method.Name == nameof(IBinding<TInterface>.Resolve) && typeof(IBinding).IsAssignableFrom(node.Method.DeclaringType))

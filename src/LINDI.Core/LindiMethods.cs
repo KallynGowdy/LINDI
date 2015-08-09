@@ -12,6 +12,9 @@ using Lindi.Core.Linq;
 
 namespace Lindi.Core
 {
+    /// <summary>
+    /// Defines a static class that contains helper methods for defining bindings.
+    /// </summary>
     public static class LindiMethods
     {
         /// <summary>
@@ -31,7 +34,6 @@ namespace Lindi.Core
         /// Returns a null binding for the given interface type.
         /// Different syntax that is mostly used for setting up injections.
         /// </summary>
-        /// <typeparam name="TInterface">The type that should be bound to a type that will be determined by the future operations applied to it.</typeparam>
         /// <returns>Null</returns>
         [BindMethod]
         public static IBinding<object> Inject()

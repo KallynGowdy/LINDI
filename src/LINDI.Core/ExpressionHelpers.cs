@@ -82,6 +82,7 @@ namespace Lindi.Core
         /// Replaces the arguments of the given <see cref="NewExpression"/> with the defined replacements.
         /// </summary>
         /// <param name="expression">The expression that the values should be replaced in.</param>
+        /// <param name="dependentBindings">The list of bindings that will be set once the expression is built.</param>
         /// <remarks>
         /// <para>
         /// In LINDI's case, "lazy" expressions are essentially pre-processed versions
@@ -161,6 +162,16 @@ namespace Lindi.Core
             );
         }
 
+        /// <summary>
+        /// Creates a new expression that makes a call to <see cref="IDictionary{TKey,TValue}.TryGetValue"/> for the given dictionary type, 
+        /// using the given <paramref name="key"/> and <paramref name="value"/>. If the value does not exist, the <paramref name="newValue"/> is added to the dictionary.
+        /// </summary>
+        /// <param name="dictionary"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="newValue"></param>
+        /// <typeparam name="TDictionary"></typeparam>
+        /// <returns></returns>
         public static Expression TryGetValueFromDictionaryAndAddValueIfItDoesNotExist<TDictionary>(TDictionary dictionary, Expression key, ParameterExpression value, Expression newValue)
         {
             ConstantExpression valueToImplementationMap = Expression.Constant(dictionary);
