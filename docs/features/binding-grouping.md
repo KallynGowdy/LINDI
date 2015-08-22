@@ -1,6 +1,6 @@
 # Grouping Bindings
 This document represents the definition of how bindings are grouped together in so called
-`"meta-binding"`.
+`"meta-bindings"`.
 
 In LINDI, because the `IBinding<TInterface>` only represents a binding for a single type, we need a way to represent multiple bindings as one. The easy way to go about this would be to construct a type that just holds a dictionary of bindings and determines the binding that should be used when called. While simple and potentially quite efficient, it does not match up with the a couple of the stated goals of LINDI. Namely that dependency graphs are verifiable at compile time. So, this document aspires to meet the needs of automatically resolving dependencies while maintaining compile time safety.
 
@@ -17,47 +17,40 @@ IBinding<TInterface> finalBinding =
               select new TImplementer(Dependency(binding));
 ```
 
+Unfortunately, many existing frameworks and libraries do not request dependencies through a generic type call, but rather via a non-generic call using a `Type` parameter. i.e.
+
+```csharp
+Type controllerType = GetControllerTypeForRoute(routeInfo);
+Controller controller = (Controller)ResolveController(controllerType);
+```
+
+Therefore, we need an API that is able to easily interface with these components while maintaining our ever precious type safety.
+
 ## User API
 
-Dependencies are defined using the `Dependency()` method helper in a constructor:
+To maintain our type safety, bindings are still defined as normal, but now they can be grouped into a nice, simple collection style object:
 
 ```csharp
-IBinding<TInterface> binding = from value in Bind<TInterface>()
-                               select new TImplementer(Dependency(bindingImDependentOn));
+IBinding<TInterface> firstBinding = from value in Bind<TImplementer>()
+                                    select new TImplementer();
+
+IBinding<TOther> secondBinding = from value in Bind<TOther>()
+                                 select new TOther();
+
+IBindingCollection bindings = new IBinding[] { firstBinding, secondBinding }.ToCollection();
+// or
+BindingCollection bindings = new IBinding[] { firstBinding, secondBinding };
+
+// Usage
+object obj = bindings.Resolve(typeof(TInterface));
+TInterface i = (TInterface)obj;
+
+object[] objs = bindings.ResolveAll(typeof(TInterface));
+TInterface[] interfaces = objs.Cast<TInterface>().ToArray();
+
 ```
 
-Multiple dependencies, multiple calls:
-
-```csharp
-IBinding<TInterface> binding = from value in Bind<TInterface>()
-                               select new TImplementer(
-                                  DependencyUsing(bindingImDependentOn),
-                                  DependencyUsing(bindingImAlsoDependentOn));
-```
-
-When being resolved, the given dependencies will be used for those constructor arguments.
+Priority is determined by which binding is defined first in the collection, although that can be changed.
 
 
 ## Internal API
-
-To maintain the fastest performance, dependencies are usually built into generated constructor functions. This means that when using the LINQ API for LINDI you are not getting a direct `IBindToConstructor` object back, but rather a lazy object that creates the function and corresponding `IBindToConstructor` object once a value is attempted to be resolved from it.
-
-This is what it looks like:
-
-```csharp
-IBinding<TInterface> binding = from value in Bind<TInterface>()
-                               // ...
-                               select new TImplementer(
-                                  DependencyUsing(bindingImDependentOn),
-                                  DependencyUsing(bindingImAlsoDependentOn));
-
-// Equivalent, in reality the anonymous class that is generated is used instead
-// of a tuple
-IBinding<TInterface> binding =
-  new LazyConstructorBinding<TInterface>(
-        new IBinding[] { bindingImDependentOn, bindingImAlsoDependentOn },
-
-        // Expression, not func
-        v => new TImplementer(v[0].Resolve(...), v[1].Resolve(...))
-  );
-```
