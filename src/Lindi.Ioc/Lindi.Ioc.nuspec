@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>$version$</version>
+    <version>$version$-beta</version>
     <title>Language Integrated Dependency Injection</title>
     <authors>Kallyn Gowdy</authors>
     <owners>Kallyn Gowdy</owners>
@@ -10,7 +10,6 @@
     <projectUrl>https://github.com/KallynGowdy/LINDI</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A better and more natural way of defining dependencies in .Net, LINDI is a language extension that takes advantage of LINQ to specify Dependency Resolution.</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>DI IoC linq</tags>
   </metadata>
