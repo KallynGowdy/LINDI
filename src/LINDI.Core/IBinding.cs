@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using System.Runtime.CompilerServices;
 using Lindi.Core.Bindings;
 using Lindi.Core.Linq;
@@ -10,6 +11,20 @@ namespace Lindi.Core
     /// </summary>
     public interface IBinding
     {
+        /// <summary>
+        /// Resolves a value out of the binding.
+        /// </summary>
+        /// <returns>The value that was resolved.</returns>
+        /// <exception cref="BindingResolutionException">
+        /// Thrown if binding fails to resolve properly. 
+        /// This SHOULD be the only catchable exception that is thrown from all instances of this method.
+        /// </exception>
+        object Resolve();
+
+        /// <summary>
+        /// Gets the <see cref="Type"/> of values that are resolved from this binding.
+        /// </summary>
+        Type BindingType { get; }
     }
 
     /// <summary>
@@ -27,7 +42,7 @@ namespace Lindi.Core
         /// This SHOULD be the only catchable exception that is thrown from all instances of this method.
         /// </exception>
         [CanBeNull]
-        TInterface Resolve();
+        new TInterface Resolve();
     }
 
     /// <summary>

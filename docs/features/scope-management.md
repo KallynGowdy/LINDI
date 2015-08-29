@@ -8,9 +8,9 @@ as wrapping any other binding in a binding that tracks the scope.
 The scopes that are provided in LINDI by default are (Checked out ones are implemented):
 
 - [x] Transient, this is the default. (No special wrapper binding is needed)
-- [ ] Singleton
-- [ ] HTTP Request, A new object is bound per HTTP Request.
-- [ ] Thread, A new object is bound per thread. (essentially like using `ThreadLocal`)
+- [x] Singleton
+- [x] HTTP Request, A new object is bound per HTTP Request.
+- [x] Thread, A new object is bound per thread. (essentially like using `ThreadLocal`)
 - [ ] Named, A new object is created per named scope.
 
 Scopes are usually specified using the `group by` clause in LINQ, however they may also be defined by extra extension methods or by wrapping an expression in the specified scope binding.

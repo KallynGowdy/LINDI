@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lindi.Tests", "LINDI.Tests\Lindi.Tests.csproj", "{566DD9F9-B1C2-4160-BC38-8D90E2F5E451}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lindi.Core", "LINDI.Core\Lindi.Core.csproj", "{B07602F9-109B-4E41-9C5A-C5E0E4C9B6E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lindi.Mvc5", "Lindi.Mvc5\Lindi.Mvc5.csproj", "{7CD13550-4863-43FF-A6B6-ADF1F2AC20B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lindi.Ioc", "Lindi.Ioc\Lindi.Ioc.csproj", "{6AB1D9A4-2A07-4A43-B800-A3E4900462D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{B07602F9-109B-4E41-9C5A-C5E0E4C9B6E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B07602F9-109B-4E41-9C5A-C5E0E4C9B6E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B07602F9-109B-4E41-9C5A-C5E0E4C9B6E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CD13550-4863-43FF-A6B6-ADF1F2AC20B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CD13550-4863-43FF-A6B6-ADF1F2AC20B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CD13550-4863-43FF-A6B6-ADF1F2AC20B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CD13550-4863-43FF-A6B6-ADF1F2AC20B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AB1D9A4-2A07-4A43-B800-A3E4900462D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AB1D9A4-2A07-4A43-B800-A3E4900462D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AB1D9A4-2A07-4A43-B800-A3E4900462D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AB1D9A4-2A07-4A43-B800-A3E4900462D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

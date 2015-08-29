@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Lindi.Core;
 using Lindi.Core.Bindings;
 using Xunit;
 
@@ -30,6 +31,25 @@ namespace Lindi.Tests.Core.Bindings
             {
                 var sample = binding.Resolve();
             });
+        }
+
+        [Fact]
+        public void Test_Non_Generic_Resolve_Calls_Generic_Resolve()
+        {
+            IBinding binding = new MockBaseBinding<ISample>();
+
+            Assert.Throws<BindingResolutionException>(() =>
+            {
+                var sample = binding.Resolve();
+            });
+        }
+
+        [Fact]
+        public void Test_BindingType_Returns_Generic_Interface_Type_Of_Binding()
+        {
+            IBinding binding = new MockBaseBinding<ISample>();
+
+            Assert.Same(typeof(ISample), binding.BindingType);
         }
     }
 }
