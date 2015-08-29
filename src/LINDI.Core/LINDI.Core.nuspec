@@ -10,7 +10,6 @@
     <projectUrl>https://github.com/KallynGowdy/LINDI</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A better and more natural way of defining dependencies in .Net, LINDI is a language extension that takes advantage of LINQ to specify Dependency Resolution.</description>
-    <releaseNotes>Initial Release</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>DI linq</tags>
   </metadata>

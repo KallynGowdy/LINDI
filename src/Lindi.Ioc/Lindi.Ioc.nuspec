@@ -3,13 +3,13 @@
   <metadata>
     <id>$id$</id>
     <version>$version$-beta</version>
-    <title>Language Integrated Dependency Injection</title>
+    <title>Ioc for LINDI</title>
     <authors>Kallyn Gowdy</authors>
     <owners>Kallyn Gowdy</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <projectUrl>https://github.com/KallynGowdy/LINDI</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A better and more natural way of defining dependencies in .Net, LINDI is a language extension that takes advantage of LINQ to specify Dependency Resolution.</description>
+    <description>This package provides common Inversion of Control container features to Lindi.Core.</description>
     <copyright>Copyright 2015</copyright>
     <tags>DI IoC linq</tags>
   </metadata>
