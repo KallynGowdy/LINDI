@@ -75,6 +75,8 @@
     <Compile Include="Core\Linq\LinqSelectTests.cs" />
     <Compile Include="Core\Linq\LinqWhereTests.cs" />
     <Compile Include="Core\OtherSample.cs" />
+    <Compile Include="Ioc\BindingCollectionTests.cs" />
+    <Compile Include="Ioc\INeedMultipleSamples.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Sample.cs" />
   </ItemGroup>
@@ -89,7 +91,12 @@
       <Project>{b07602f9-109b-4e41-9c5a-c5e0e4c9b6e8}</Project>
       <Name>Lindi.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Lindi.Ioc\Lindi.Ioc.csproj">
+      <Project>{6ab1d9a4-2a07-4a43-b800-a3e4900462d5}</Project>
+      <Name>Lindi.Ioc</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
