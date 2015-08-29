@@ -156,6 +156,16 @@ namespace Lindi.Tests.Ioc
         }
 
         [Fact]
+        public void Test_Resolve_Non_Generic_Null_Type_From_Collection_Throws_ArgumentNullException()
+        {
+            IBindingCollection collection = new BindingCollection();
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                object resolved = collection.Resolve(null);
+            });
+        }
+
+        [Fact]
         public void Test_Resolve_Generic_Missing_Type_From_Collection_Throws_BindingResolutionException()
         {
             IBindingCollection collection = new BindingCollection();
@@ -172,6 +182,16 @@ namespace Lindi.Tests.Ioc
             Assert.Throws<BindingResolutionException>(() =>
             {
                 object[] resolved = collection.ResolveAll(typeof(ISample));
+            });
+        }
+
+        [Fact]
+        public void Test_Resolve_Multiple_Non_Generic_Null_Type_Bindings_From_Collection_Throws_ArgumentNullException()
+        {
+            IBindingCollection collection = new BindingCollection();
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                object[] resolved = collection.ResolveAll(null);
             });
         }
 
